@@ -50,22 +50,22 @@ https://github.com/0xTycoon/punk-blocks
 contract PunkBlocks {
     // Layer is in the order of rendering
     enum Layer {
-        Base,    // Base is the face. Determines if m or f version will be used to render the remaining layers
-        Cheeks,
-        Blemish,
-        Hair,
-        Beard,
-        Eyes,
-        Eyewear,
-        Nose,
-        Mouth,
-        MouthProp,
-        Earring,
-        Headgear,
-        Neck
+        Base,      // 0 Base is the face. Determines if m or f version will be used to render the remaining layers
+        Cheeks,    // 1 (Rosy Cheeks)
+        Blemish,   // 2 (Mole, Spots)
+        Hair,      // 3 (Purple Hair, Shaved Head, Pigtails, ...)
+        Beard,     // 4 (Big Beard, Front Beard, Goat, ...)
+        Eyes,      // 5 (Clown Eyes Green, Green Eye Shadow, ...)
+        Eyewear,   // 6 (VR, 3D Glass, Eye Mask, Regular Shades, Welding Glasses, ...)
+        Nose,      // 7 (Clown Nose)
+        Mouth,     // 8 (Hot Lipstick, Smile, Buck Teeth, ...)
+        MouthProp, // 9 (Medical Mask, Cigarette, ...)
+        Earring,   // 10 (Earring)
+        Headgear,  // 11 (Beanie, Fedora, Hoodie, Police Cap, Tiara, Headband, ...)
+        Neck       // 12 (Choker, Silver Chain, Gold Chain)
     }
     struct Block {
-        Layer layer;     // layer BASE is the face
+        Layer layer;     // 13 possible layers
         bytes dataMale;  // male version of this attribute
         bytes dataFemale;// female version of this attribute
     }
@@ -77,6 +77,7 @@ contract PunkBlocks {
     * Here we initialize `blocks` storage with the entire set of original CryptoPunk attributes
     */
     constructor() {
+        // Initial blocks that were sourced from https://github.com/cryptopunksnotdead/punks.js/blob/master/yeoldepunks/yeoldepunks-24x24.png
         Block storage b = blocks[bytes32(hex"9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283")];
         b.layer = Layer(0);
         b.dataMale = hex"89504e470d0a1a0a0000000d4948445200000018000000180403000000125920cb00000012504c5445000000000000713f1d8b532c5626007237092b4acd040000000174524e530040e6d8660000004f4944415478da62a00a1014141480b11995949414611c2165252525989490113247092747c549c945006698629092a800c264b8324674030489315a49118f3284ab9590fc23045783cc01040000ffffd8690b6ca3604b190000000049454e44ae426082";
@@ -762,8 +763,10 @@ contract PunkBlocks {
         bytes32 key = keccak256(abi.encodePacked(_name));
         Block storage b = blocks[key];
         require (_layer < 13, "invalid _layer");
-        require (_dataMale.length + _dataFemale.length > 0, "no data");
-        require (b.dataMale.length + b.dataFemale.length == 0, "slot taken");
+        unchecked{
+            require (_dataMale.length + _dataFemale.length > 0, "no data");
+            require (b.dataMale.length + b.dataFemale.length == 0, "slot taken");
+        }
         if (_dataMale.length > 0) {
             require (_validatePng(_dataMale), "invalid m png");
             b.dataMale = _dataMale;
@@ -775,77 +778,77 @@ contract PunkBlocks {
         b.layer = Layer(_layer);
         index[nextId] = key;
         emit NewBlock(msg.sender, nextId);
-        nextId++;
+        unchecked{nextId++;}
     }
 
     /**
     * @dev Just a limited png validation. Only verifies that the png is 24x24 and has a png structure
     */
     function _validatePng(bytes calldata _data) pure internal returns (bool) {
-        if (_data.length < 8) {
-            return false;
-        }
-        bytes memory pngHeader = bytes("\x89PNG\r\n\x1a\n"); // first 8 bytes
-        uint pos;
-        while (pos < 8) {
-            if (_data[pos] != pngHeader[pos]) {
+        unchecked {
+            if (_data.length < 8) {
                 return false;
             }
-            unchecked{pos++;}
-        }
-        int32 chunkLen;
-        while (true) {
-             // next 4 bytes represent a big-endian int32, the chunk length
-            chunkLen = int32(uint32(uint8(_data[pos+3]))
-            | uint32(uint8(_data[pos+2]))<<8
-            | uint32(uint8(_data[pos+1]))<<16
-                | uint32(uint8(_data[pos]))<<24);
-            pos += 4;
-            if (
-                _data[pos] == bytes1("I") &&
-                _data[pos+1] == bytes1("H") &&
-                _data[pos+2] == bytes1("D") &&
-                _data[pos+3] == bytes1("R")) { // IHDR
-                //pos +=4; // payload is now between pos and pos + chunkLen
-                if (24 != int32(uint32(uint8(_data[pos+7]))
-                    | uint32(uint8(_data[pos+6]))<<8
-                    | uint32(uint8(_data[pos+5]))<<16
-                    | uint32(uint8(_data[pos+4]))<<24)) { // width needs to be 24
+            bytes memory pngHeader = bytes("\x89PNG\r\n\x1a\n"); // first 8 bytes
+            uint pos;
+            while (pos < 8) {
+                if (_data[pos] != pngHeader[pos]) {
                     return false;
                 }
-                //pos +=4;
-                if (24 != int32(uint32(uint8(_data[pos+11]))
-                | uint32(uint8(_data[pos+10]))<<8
-                | uint32(uint8(_data[pos+9]))<<16
-                    | uint32(uint8(_data[pos+8]))<<24)) { // height needs to be 24
-                    return false;
-                }
-            } else if (
-                _data[pos] == bytes1("P") &&
-                _data[pos+1] == bytes1("L") &&
-                _data[pos+2] == bytes1("T") &&
-                _data[pos+3] == bytes1("E")) { // PLTE
-            } else if (
-                _data[pos] == bytes1("t") &&
-                _data[pos+1] == bytes1("R") &&
-                _data[pos+2] == bytes1("N") &&
-                _data[pos+3] == bytes1("S")) { // tRNS
-            } else if (
-                _data[pos] == bytes1("I") &&
-                _data[pos+1] == bytes1("D") &&
-                _data[pos+2] == bytes1("A") &&
-                _data[pos+3] == bytes1("T")) { // IDAT
-            } else if (
-                _data[pos] == bytes1("I") &&
-                _data[pos+1] == bytes1("E") &&
-                _data[pos+2] == bytes1("N") &&
-                _data[pos+3] == bytes1("D")) { // IEND
-                return true; // png is valid (without checking the CRC)
-            } else {
-                return false;
+                pos++;
             }
-            pos += 4 + uint(int(chunkLen)) + 4; // skip the payload, ignore CRC
-        }
+            int32 chunkLen;
+            while (true) {
+                 // next 4 bytes represent a big-endian int32, the chunk length
+                chunkLen = int32(uint32(uint8(_data[pos+3]))
+                | uint32(uint8(_data[pos+2]))<<8
+                | uint32(uint8(_data[pos+1]))<<16
+                    | uint32(uint8(_data[pos]))<<24);
+                pos += 4;
+                if (
+                    _data[pos] == bytes1("I") &&
+                    _data[pos+1] == bytes1("H") &&
+                    _data[pos+2] == bytes1("D") &&
+                    _data[pos+3] == bytes1("R")) { // IHDR
+                    if (24 != int32(uint32(uint8(_data[pos+7]))
+                        | uint32(uint8(_data[pos+6]))<<8
+                        | uint32(uint8(_data[pos+5]))<<16
+                        | uint32(uint8(_data[pos+4]))<<24)) { // width needs to be 24
+                        return false;
+                    }
+                    if (24 != int32(uint32(uint8(_data[pos+11]))
+                    | uint32(uint8(_data[pos+10]))<<8
+                    | uint32(uint8(_data[pos+9]))<<16
+                        | uint32(uint8(_data[pos+8]))<<24)) { // height needs to be 24
+                        return false;
+                    }
+                } else if (
+                    _data[pos] == bytes1("P") &&
+                    _data[pos+1] == bytes1("L") &&
+                    _data[pos+2] == bytes1("T") &&
+                    _data[pos+3] == bytes1("E")) {  // PLTE
+                } else if (
+                    _data[pos] == bytes1("t") &&
+                    _data[pos+1] == bytes1("R") &&
+                    _data[pos+2] == bytes1("N") &&
+                    _data[pos+3] == bytes1("S")) {  // tRNS
+                } else if (
+                    _data[pos] == bytes1("I") &&
+                    _data[pos+1] == bytes1("D") &&
+                    _data[pos+2] == bytes1("A") &&
+                    _data[pos+3] == bytes1("T")) {  // IDAT
+                } else if (
+                    _data[pos] == bytes1("I") &&
+                    _data[pos+1] == bytes1("E") &&
+                    _data[pos+2] == bytes1("N") &&
+                    _data[pos+3] == bytes1("D")) {  // IEND
+                    return true;                    // png is valid (without checking the CRC)
+                } else {
+                    return false;
+                }
+                pos += 4 + uint(int(chunkLen)) + 4; // skip the payload, ignore CRC
+            }
+        } //unchecked
         return true;
     }
 
@@ -1037,7 +1040,6 @@ library Base64 {
                 mstore8(sub(resultPtr, 1), 0x3d)
             }
         }
-
         return result;
     }
 }
