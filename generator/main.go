@@ -59,7 +59,7 @@ func dumpBlocks() {
 15,Cowboy Hat,m,11
 16,Mustache,m,4
 17,Clown Nose,m,7
-18,Cigarette,m,8
+18,Cigarette,m,9
 19,Nerd Glasses,m,6
 20,Regular Shades,m,6
 21,Knitted Cap,m,11
@@ -72,7 +72,7 @@ func dumpBlocks() {
 28,Small Shades,m,6
 29,Shaved Head,m,3
 30,Classic Shades,m,6
-31,Vape,m,8
+31,Vape,m,9
 32,Silver Chain,m,12
 33,Smile,m,8
 34,Big Shades,m,6
@@ -81,7 +81,7 @@ func dumpBlocks() {
 37,Cap,m,11
 38,Clown Eyes Green,m,5
 39,Normal Beard Black,m,4
-40,Medical Mask,m,8
+40,Medical Mask,m,9
 41,Normal Beard,m,4
 42,VR,m,6
 43,Eye Patch,m,5
@@ -104,7 +104,7 @@ func dumpBlocks() {
 60,Earring,m,10
 61,Horned Rim Glasses,m,6
 62,Headband,m,11
-63,Pipe,m,8
+63,Pipe,m,9
 64,Messy Hair,m,3
 65,Front Beard Dark,m,4
 66,Hoodie,m,11
@@ -135,7 +135,7 @@ func dumpBlocks() {
 91,Red Mohawk,f,3
 92,Messy Hair,f,3
 93,Clown Eyes Blue,f,5
-94,Pipe,f,8
+94,Pipe,f,9
 95,Wild Hair,f,3
 96,Purple Eye Shadow,f,5
 97,Stringy Hair,f,3
@@ -146,7 +146,7 @@ func dumpBlocks() {
 102,Eye Mask,f,6
 103,Clown Hair Green,f,3
 104,Cap,f,11
-105,Medical Mask,f,8
+105,Medical Mask,f,9
 106,Bandana,f,11
 107,Purple Lipstick,f,8
 108,Clown Nose,f,7
@@ -155,12 +155,12 @@ func dumpBlocks() {
 111,Straight Hair Blonde,f,3
 112,Knitted Cap,f,11
 113,Clown Eyes Green,f,5
-114,Cigarette,f,8
+114,Cigarette,f,9
 115,Welding Goggles,f,6
 116,Mohawk Thin,f,3
 117,Gold Chain,f,12
 118,VR,f,6
-119,Vape,f,8
+119,Vape,f,9
 120,Pink With Hat,f,3
 121,Blonde Bob,f,3
 122,Mohawk,f,3

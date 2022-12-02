@@ -169,7 +169,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"4483a654781ca58fa6ba3590c74c005bce612263e17c70445d6cd167e55e900b");
         nextId++;
         b = blocks[bytes32(hex"1885fe71e225eade934ab7040d533bd49efc5d66e8f2d4b5aa42477ae9892ec9")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataMale = hex"89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000004b4944415478da6262a03118b560d482510b869a0577efde6d180da2116801cd010b057affe31067c4c921c5f063c78e6108ca4c4d60905b7a0bc55c465afb806134990eb80580000000ffff78ff0b44c51816510000000049454e44ae426082";
         index[nextId] = bytes32(hex"1885fe71e225eade934ab7040d533bd49efc5d66e8f2d4b5aa42477ae9892ec9");
         nextId++;
@@ -234,7 +234,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"6a400b1508bfd84ab2f4cb067d6d74dc46f74cdae7efd8b2a2d990c9f037e426");
         nextId++;
         b = blocks[bytes32(hex"3e6bc8fc06a569840c9490f8122e6b7f08a7598486649b64477b548602362516")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataMale = hex"89504e470d0a1a0a0000000d49484452000000180000001802030000009d19d56b0000000c504c54450000000000005959590040ff401523b30000000174524e530040e6d8660000001b4944415478da621838c01aea00a2a4563b20f1700140000000ffff5249023a69668c5f0000000049454e44ae426082";
         index[nextId] = bytes32(hex"3e6bc8fc06a569840c9490f8122e6b7f08a7598486649b64477b548602362516");
         nextId++;
@@ -279,7 +279,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"05a5afe13f23e20e6cebabae910a492c91f4b862c2e1a5822914be79ab519bd8");
         nextId++;
         b = blocks[bytes32(hex"ac5194b2986dd9939aedf83029a6e0a1d7d482eb00a5dafa05fc0aaa9b616582")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataMale = hex"89504e470d0a1a0a0000000d49484452000000180000001802030000009d19d56b00000009504c5445000000c9c9c9b1b1b1dfe0055e0000000174524e530040e6d8660000002a4944415478da62a0096081508c50ae0384213a0542858029d508b092d0506441d6001c2602020000ffff944e033f6ebf94330000000049454e44ae426082";
         index[nextId] = bytes32(hex"ac5194b2986dd9939aedf83029a6e0a1d7d482eb00a5dafa05fc0aaa9b616582");
         nextId++;
@@ -394,7 +394,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"b040fea53c68833d052aa3e7c8552b04390371501b9976c938d3bd8ec66e4734");
         nextId++;
         b = blocks[bytes32(hex"74ca947c09f7b62348c4f3c81b91973356ec81529d6220ff891012154ce517c7")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataMale = hex"89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000000704944415478da6262a03118b560d482510b462dc00276eedcd940330b6086235b42f3206218f27130b27df09f963ef8df1a28826ec97f2c988191121f802ca95eff06660ecc523080895312078c2043907df2f8f51706649a521fa00717dcf019477ec0cd66a45184c3cd05040000ffffe2512fe56a94b4330000000049454e44ae426082";
         index[nextId] = bytes32(hex"74ca947c09f7b62348c4f3c81b91973356ec81529d6220ff891012154ce517c7");
         nextId++;
@@ -549,7 +549,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"09c36cad1064f6107d2e3bef439f87a16c8ef2e95905a827b2ce7f111dd801d7");
         nextId++;
         b = blocks[bytes32(hex"74ca947c09f7b62348c4f3c81b91973356ec81529d6220ff891012154ce517c7")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataFemale = hex"89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000000704944415478da6262a03118b560d482510b462dc00276eedcd940330b6086235b42f3206218f27130b27df09f963ef8df1a28826ec97f2c988191121f802ca95eff06660ecc523080895312078c2043907df2f8f51706649a521fa00717dcf019477ec0cd66a45184c3cd05040000ffffe2512fe56a94b4330000000049454e44ae426082";
         index[nextId] = bytes32(hex"74ca947c09f7b62348c4f3c81b91973356ec81529d6220ff891012154ce517c7");
         nextId++;
@@ -604,7 +604,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"d35b2735e5fcc86991c8501996742b3b8c35772d92b69859de58ddd3559be46c");
         nextId++;
         b = blocks[bytes32(hex"ac5194b2986dd9939aedf83029a6e0a1d7d482eb00a5dafa05fc0aaa9b616582")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataFemale = hex"89504e470d0a1a0a0000000d49484452000000180000001802030000009d19d56b00000009504c5445000000c9c9c9b1b1b1dfe0055e0000000174524e530040e6d866000000274944415478da62a0256084d20e1086e814081502a65423c0546828b2206b000ea300010000ffff92de033acd8c71070000000049454e44ae426082";
         index[nextId] = bytes32(hex"ac5194b2986dd9939aedf83029a6e0a1d7d482eb00a5dafa05fc0aaa9b616582");
         nextId++;
@@ -649,7 +649,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"2004722753f61acb2cefde9b14d2c01c6bcb589d749b4ea616b4e47d83fdb056");
         nextId++;
         b = blocks[bytes32(hex"1885fe71e225eade934ab7040d533bd49efc5d66e8f2d4b5aa42477ae9892ec9")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataFemale = hex"89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000004b4944415478da6262a03118b560d482510b869a0577efde6d180da2116801cd010b057affe31067c4c921c5f063c78e6108ca4c4d60905b7a0bc55c465afb806134990eb80580000000ffff78ff0b44c51816510000000049454e44ae426082";
         index[nextId] = bytes32(hex"1885fe71e225eade934ab7040d533bd49efc5d66e8f2d4b5aa42477ae9892ec9");
         nextId++;
@@ -674,7 +674,7 @@ contract PunkBlocks {
         index[nextId] = bytes32(hex"15854f7a2b735373aa76722c01e2f289d8b18cb1a70575796be435e4ce55e57a");
         nextId++;
         b = blocks[bytes32(hex"3e6bc8fc06a569840c9490f8122e6b7f08a7598486649b64477b548602362516")];
-        b.layer = Layer(8);
+        b.layer = Layer(9);
         b.dataFemale = hex"89504e470d0a1a0a0000000d49484452000000180000001802030000009d19d56b0000000c504c54450000000000005959590040ff401523b30000000174524e530040e6d8660000001b4944415478da621838c01aea00a2a4563b20f1700140000000ffff5249023a69668c5f0000000049454e44ae426082";
         index[nextId] = bytes32(hex"3e6bc8fc06a569840c9490f8122e6b7f08a7598486649b64477b548602362516");
         nextId++;
@@ -782,7 +782,8 @@ contract PunkBlocks {
     }
 
     /**
-    * @dev Just a limited png validation. Only verifies that the png is 24x24 and has a png structure
+    * @dev Just a limited png validation. Only verifies that the png is 24x24 and has a png structure,
+    *   but doesn't validate any checksums or any other validation
     */
     function _validatePng(bytes calldata _data) pure internal returns (bool) {
         unchecked {
