@@ -745,12 +745,89 @@ contract PunkBlocks {
         require (_layer < 13, "invalid _layer");
         require (_dataMale.length + _dataFemale.length > 0, "no data");
         require (b.dataMale.length + b.dataFemale.length == 0, "slot taken");
-        b.dataMale = _dataMale;
-        b.dataFemale = _dataFemale;
+        if (_dataMale.length > 0) {
+            require (_validatePng(_dataMale), "invalid m png");
+            b.dataMale = _dataMale;
+        }
+        if (_dataFemale.length > 0) {
+            require (_validatePng(_dataFemale), "invalid f png");
+            b.dataFemale = _dataFemale;
+        }
         b.layer = Layer(_layer);
         index[nextId] = key;
         emit NewBlock(msg.sender, nextId);
         nextId++;
+    }
+
+    /**
+    * @dev Just a limited png validation. Only verifies that the png is 24x24 and has a png structure
+    */
+    function _validatePng(bytes calldata _data) view internal returns (bool) {
+        if (_data.length < 8) {
+            return false;
+        }
+        bytes memory pngHeader = bytes("\x89PNG\r\n\x1a\n"); // first 8 bytes
+        uint pos;
+        while (pos < 8) {
+            if (_data[pos] != pngHeader[pos]) {
+                return false;
+            }
+            unchecked{pos++;}
+        }
+        int32 chunkLen;
+        while (true) {
+             // next 4 bytes represent a big-endian int32, the chunk length
+            chunkLen = int32(uint32(uint8(_data[pos+3]))
+            | uint32(uint8(_data[pos+2]))<<8
+            | uint32(uint8(_data[pos+1]))<<16
+                | uint32(uint8(_data[pos]))<<24);
+            pos += 4;
+            if (
+                _data[pos] == bytes1("I") &&
+                _data[pos+1] == bytes1("H") &&
+                _data[pos+2] == bytes1("D") &&
+                _data[pos+3] == bytes1("R")) { // IHDR
+                //pos +=4; // payload is now between pos and pos + chunkLen
+                if (24 != int32(uint32(uint8(_data[pos+7]))
+                    | uint32(uint8(_data[pos+6]))<<8
+                    | uint32(uint8(_data[pos+5]))<<16
+                    | uint32(uint8(_data[pos+4]))<<24)) { // width needs to be 24
+                    return false;
+                }
+                //pos +=4;
+                if (24 != int32(uint32(uint8(_data[pos+11]))
+                | uint32(uint8(_data[pos+10]))<<8
+                | uint32(uint8(_data[pos+9]))<<16
+                    | uint32(uint8(_data[pos+8]))<<24)) { // height needs to be 24
+                    return false;
+                }
+            } else if (
+                _data[pos] == bytes1("P") &&
+                _data[pos+1] == bytes1("L") &&
+                _data[pos+2] == bytes1("T") &&
+                _data[pos+3] == bytes1("E")) { // PLTE
+            } else if (
+                _data[pos] == bytes1("t") &&
+                _data[pos+1] == bytes1("R") &&
+                _data[pos+2] == bytes1("N") &&
+                _data[pos+3] == bytes1("S")) { // tRNS
+            } else if (
+                _data[pos] == bytes1("I") &&
+                _data[pos+1] == bytes1("D") &&
+                _data[pos+2] == bytes1("A") &&
+                _data[pos+3] == bytes1("T")) { // IDAT
+            } else if (
+                _data[pos] == bytes1("I") &&
+                _data[pos+1] == bytes1("E") &&
+                _data[pos+2] == bytes1("N") &&
+                _data[pos+3] == bytes1("D")) { // IEND
+                return true; // png is valid (without checking the CRC)
+            } else {
+                return false;
+            }
+            pos += 4 + uint(int(chunkLen)) + 4; // skip the payload, ignore CRC
+        }
+        return true;
     }
 
     /**
