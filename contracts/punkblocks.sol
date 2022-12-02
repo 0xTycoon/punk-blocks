@@ -37,7 +37,7 @@ by supplying desired arguments to a function, such as
 the id of a punk, or a list of the traits.
 
 3. An unlimited number of new punk images can be generated from
-the existing classic set of traits, or even new traits!
+the existing classic set of traits, or even from new traits!
 
 4. New traits (blocks) can be added to the contract by
 registering them with the `registerBlock` function.

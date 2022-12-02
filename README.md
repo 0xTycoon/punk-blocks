@@ -16,6 +16,6 @@ More info soon...
 
 # Demo
 
-An alien with a lux beard and 3d glass.
+An Alien with a Luxurious Beard and 3D Glasses.
 
 ![PunkBlocks](demo1.svg)
