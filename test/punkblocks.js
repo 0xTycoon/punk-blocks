@@ -37,6 +37,10 @@ describe("PunkBlocks", function () {
             svg = await blocks.svgFromIDs([10, 71, 12]);
             console.log(svg);
 
+            // uncomment if running on mainnet to test svgFromPunkID
+            //svg = await blocks.svgFromPunkID(8348);
+            //console.log("moo: "+svg);
+
 
         });
 

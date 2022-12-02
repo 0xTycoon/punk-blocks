@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
-// Version: 0.0.1
-pragma solidity ^0.8.9;
+// Version: v0.0.1
+pragma solidity ^0.8.17;
 /**
 
  ███████████                        █████
@@ -26,10 +26,26 @@ pragma solidity ^0.8.9;
 
             A Registry of 24x24 png images
 
+This contract:
+
+1. Stores all the classic traits of the CryptoPunks in
+individual png files, 100% on-chain. These are then used as
+blocks to construct CryptoPunk images. Outputted as SVGs.
+
+2. Any of the 10,000 "classic" CryptoPunks can be generated
+by supplying desired arguments to a function, such as
+the id of a punk, or a list of the traits.
+
+3. An unlimited number of new punk images can be generated from
+the existing classic set of traits, or even new traits!
+
+4. New traits (blocks) can be added to the contract by
+registering them with the `registerBlock` function.
+
+Further documentation:
+https://github.com/0xTycoon/punk-blocks
 
 */
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
 
 contract PunkBlocks {
     // Layer is in the order of rendering
@@ -729,9 +745,12 @@ contract PunkBlocks {
     }
 
     /**
-    * @dev registerBlock allows anybody to add a new block to the contract
-    * @param _dataMale png data for the male version
-    * @param _dataMale png data for the female version
+    * @dev registerBlock allows anybody to add a new block to the contract.
+    *   Either _dataMale or _dataFemale, or both, must contain a byte stream of a png file.
+    *   It's best if the png is using an 'index palette' and the lowest bit depth possible,
+    *   while keeping the highest compression setting.
+    * @param _dataMale png data for the male version, 24x24
+    * @param _dataFemale png data for the female version, 24x24
     * @param _layer 0 to 12, corresponding to the Layer enum type.
     */
     function registerBlock(
@@ -762,7 +781,7 @@ contract PunkBlocks {
     /**
     * @dev Just a limited png validation. Only verifies that the png is 24x24 and has a png structure
     */
-    function _validatePng(bytes calldata _data) view internal returns (bool) {
+    function _validatePng(bytes calldata _data) pure internal returns (bool) {
         if (_data.length < 8) {
             return false;
         }
@@ -868,6 +887,26 @@ contract PunkBlocks {
     }
 
     /**
+    * @dev svgFromPunkID returns the svg data as a string given a punk id
+    * @param _tokenID uint256 IDs a punk id, 0-9999
+    */
+    function svgFromPunkID(uint256 _tokenID) external view returns (string memory) {
+        // Get the attributes first, using https://github.com/0xTycoon/punks-token-uri
+        IAttrParser p = IAttrParser(0x4e776fCbb241a0e0Ea2904d642baa4c7E171a1E9);
+        string[8] memory _attributeNames = p.parseAttributes(_tokenID);
+        bytes32[] memory attributeKeys = new bytes32[](8);
+        for (uint i = 0; i < 8; i++) {
+            if (bytes(_attributeNames[i]).length == 0) {
+                break;
+            }
+            attributeKeys[i] = keccak256(
+                abi.encodePacked(_attributeNames[i])
+            );
+        }
+        return _svg(attributeKeys);
+    }
+
+    /**
     * @dev _svg build the svg, layer by layer. The first layer determines if dataFemale or dataMale is used for
     *   the afterward layers. Empty layers will be ignored.
     * @return string of the svg image
@@ -914,6 +953,10 @@ contract PunkBlocks {
             end
         ));
     }
+}
+// IAttrParser implemented by 0x4e776fCbb241a0e0Ea2904d642baa4c7E171a1E9
+interface IAttrParser {
+    function parseAttributes(uint256 _tokenId) external view returns (string[8] memory);
 }
 
 library Base64 {
