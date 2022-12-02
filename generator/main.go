@@ -2,13 +2,10 @@ package main
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/csv"
 	"encoding/hex"
 	"fmt"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
-	"image"
-	"image/color"
 	"io"
 )
 
@@ -222,19 +219,22 @@ nextId++;
 	}
 
 	fmt.Println(str)
+	/*
+		// create a "red" punk
+		var img image.Image
+		img = allBlocks.getPunkBlock(4)
+		img, _ = optimizeImage(img)
+		p := img.(*image.Paletted)
+		p.Palette[2] = color.RGBA{255, 0, 0, 255} // change the face color
+		var buf bytes.Buffer
+		bufw := io.Writer(&buf)
+		err = optimalPngCompress(bufw, img)
+		encoded := hex.EncodeToString(buf.Bytes())
+		fmt.Println(encoded)
+		encoded = base64.StdEncoding.EncodeToString(buf.Bytes())
+		fmt.Println(encoded)
 
-	// create a "red" punk
-	var img image.Image
-	img = allBlocks.getPunkBlock(4)
-	img, _ = optimizeImage(img)
-	p := img.(*image.Paletted)
-	p.Palette[2] = color.RGBA{255, 0, 0, 255} // change the face color
-	var buf bytes.Buffer
-	bufw := io.Writer(&buf)
-	err = optimalPngCompress(bufw, img)
-	encoded := hex.EncodeToString(buf.Bytes())
-	fmt.Println(encoded)
-	encoded = base64.StdEncoding.EncodeToString(buf.Bytes())
-	fmt.Println(encoded)
+
+	*/
 
 }
