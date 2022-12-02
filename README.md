@@ -1,5 +1,6 @@
 
-![PunkBlocks](/test.svg)
+![PunkBlocks](title.png)
+
 
 # Welcome to PunkBlocks
 
@@ -12,3 +13,9 @@ A view function the combines the attributes, outputting the composite image into
 Anybody can register and store new punk block attributes, then use to create their own hybrid punks, or display the original punks. 
 
 More info soon...
+
+# Demo
+
+An alien with a lux beard and 3d glass.
+
+![PunkBlocks](demo1.svg)
