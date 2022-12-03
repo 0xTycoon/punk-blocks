@@ -935,14 +935,14 @@ contract PunkBlocks {
             require (layers[0].dataMale.length > 0, "base layer attribute missing");
         }
         for (uint i = 0; i < 13; i++) {
-            if (isFemale && layers[0].dataFemale.length > 0) {
+            if (isFemale && layers[i].dataFemale.length > 0) {
                 images = string(abi.encodePacked(
                     images,
                     imgStart,
                     Base64.encode(layers[i].dataFemale),
                     imgEnd
                 ));
-            } else if(layers[i].dataMale.length > 0)  {
+            } else if (layers[i].dataMale.length > 0)  {
                 images = string(abi.encodePacked(
                     images,
                     imgStart,
