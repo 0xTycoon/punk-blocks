@@ -50,9 +50,11 @@ belong to a punk.
 
 Naturally, this project would not have been possible without Larva Labs, so 
 thanks to them for creating the punks & taking initiative to deploy the 
-additional metadata on-chain. Also, thanks to @samwilsn who showed that it 
+additional metadata on-chain. Also, thanks to 
+[@samwilsn](https://github.com/samwilsn) who showed that it 
 [is possible](https://binarycake.ca/posts/face-png/) to store png images and 
-render them inside SVGs, and thanks to @geraldb for providing a 
+render them inside SVGs, and thanks to [@geraldb](https://github.com/geraldb) 
+for providing a 
 [handy sprite sheet](https://github.com/cryptopunksnotdead/punks.js)!
 
 
@@ -132,7 +134,7 @@ enum Layer {
 ### Adding new blocks.
 
 New blocks can be added for any layer using the `registerBlock` function.
-The block must consist of either a male attribute image data, or a female data,
+The block must consist of either a male attribute image data, or female data,
 or both. With the exception that Layer 0 blocks **should** either contain male
 attribute image data **or** female data, but **NOT both**.
 
@@ -145,7 +147,7 @@ palette** rather than an RGBA, using a single entry for the transparency,
 with a low bit-depth. E.g. You could use a bit-depth of 2 if you have 4 colors,
 or 4 if you have 16. 
 
-You can use the [generator](./generator/README.md) Go program as an example.
+You can use the [generator](./generator/) Go program as an example.
 It reads some blocks from a source png file and breaks them down to 24x24
 images. Each image is then saved as an optimized png, then the Solidity code 
 is generated with the help of a sprite sheet data in a CSV format.
