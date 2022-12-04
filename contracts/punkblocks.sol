@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
-// Version: v0.0.1
+// Version: v0.0.2
 pragma solidity ^0.8.17;
 /**
 
@@ -69,10 +69,10 @@ contract PunkBlocks {
         bytes dataMale;  // male version of this attribute
         bytes dataFemale;// female version of this attribute
     }
-    mapping(bytes32 => Block) blocks;  // stores punk attributes as a png
-    uint256 nextId;                    // next id to use when adding a block
-    mapping(uint256 => bytes32) index; // index of each block by its sequence
-    event NewBlock(address, uint256);
+    mapping(bytes32 => Block) public blocks;  // stores punk attributes as a png
+    uint256 public nextId;                    // next id to use when adding a block
+    mapping(uint256 => bytes32) public index; // index of each block by its sequence
+    event NewBlock(address, uint256, string);
     /**
     * Here we initialize `blocks` storage with the entire set of original CryptoPunk attributes
     */
@@ -753,6 +753,7 @@ contract PunkBlocks {
     * @param _dataMale png data for the male version, 24x24
     * @param _dataFemale png data for the female version, 24x24
     * @param _layer 0 to 12, corresponding to the Layer enum type.
+    * @param _name the name of the trait, Camel Case. e.g. "Luxurious Beard"
     */
     function registerBlock(
         bytes calldata _dataMale,
@@ -777,7 +778,7 @@ contract PunkBlocks {
         }
         b.layer = Layer(_layer);
         index[nextId] = key;
-        emit NewBlock(msg.sender, nextId);
+        emit NewBlock(msg.sender, nextId, _name);
         unchecked{nextId++;}
     }
 
@@ -856,7 +857,11 @@ contract PunkBlocks {
     /**
     * @dev svgFromNames returns the svg data as a string
     * @param _attributeNames a list of attribute names, eg "Male 1", "Goat"
-    *    must have at least 1 layer 0 attribute (eg. Male, Female, Alien, Ape, Zombie)
+    *   must have at least 1 layer 0 attribute (eg. Male, Female, Alien, Ape, Zombie)
+    *   e.g. ["Male 1","Goat"]
+    *   Where "Male 1" is a layer 0 attribute, that decides what version of
+    *   image to use for the higher
+    *   layers (dataMale or dataFemale)
     */
     function svgFromNames(string[] calldata _attributeNames) external view returns (string memory){
         bytes32[] memory attributeKeys = new bytes32[](_attributeNames.length);
@@ -872,7 +877,11 @@ contract PunkBlocks {
     * @dev svgFromKeys returns the svg data as a string
     * @param _attributeKeys a list of attribute names that have been hashed,
     *    eg keccak256("Male 1"), keccak256("Goat")
-    *    must have at least 1 layer 0 attribute (eg. keccak256("Male"))
+    *    must have at least 1 layer 0 attribute (eg. keccak256("Male 1")) which
+    *    decides what version of image to use for the higher layers
+    *    (dataMale or dataFemale)
+    *    e.g. ["0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283",
+    *    "0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a"]
     */
     function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (string memory) {
         return _svg(_attributeKeys);
@@ -880,6 +889,10 @@ contract PunkBlocks {
 
     /**
     * @dev svgFromIDs returns the svg data as a string
+    *   e.g. [9,55,99]
+    *   One of the elements must be must be a layer 0 block.
+    *    This element decides what version of image to use for the higher layers
+    *    (dataMale or dataFemale)
     * @param _ids uint256 ids of an attribute, by it's index of creation
     */
     function svgFromIDs(uint256[] calldata _ids) external view returns (string memory) {
@@ -896,13 +909,17 @@ contract PunkBlocks {
     */
     function svgFromPunkID(uint256 _tokenID) external view returns (string memory) {
         // Get the attributes first, using https://github.com/0xTycoon/punks-token-uri
-        IAttrParser p = IAttrParser(0x4e776fCbb241a0e0Ea2904d642baa4c7E171a1E9);
+        IAttrParser p = IAttrParser(0xD8E916C3016bE144eb2907778cf972C4b01645fC);
         string[8] memory _attributeNames = p.parseAttributes(_tokenID);
-        bytes32[] memory attributeKeys = new bytes32[](8);
+        uint count;
         for (uint i = 0; i < 8; i++) {
             if (bytes(_attributeNames[i]).length == 0) {
                 break;
             }
+            count++;
+        }
+        bytes32[] memory attributeKeys = new bytes32[](count);
+        for (uint i = 0; i < count; i++) {
             attributeKeys[i] = keccak256(
                 abi.encodePacked(_attributeNames[i])
             );
@@ -919,7 +936,7 @@ contract PunkBlocks {
         string memory start = '<svg class="punkblock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
         string memory end = '</svg>';
         string memory imgStart = '<image x="0" y="0" width="24" height="24" style="image-rendering:crisp-edges;image-rendering:pixelated" xlink:href="data:image/png;base64,';
-        string memory imgEnd = '" />';
+        string memory imgEnd = '"/>';
         string memory images;
         Block[] memory layers = new Block[](13);
         // load the block layers in
@@ -942,7 +959,7 @@ contract PunkBlocks {
                     Base64.encode(layers[i].dataFemale),
                     imgEnd
                 ));
-            } else if (layers[i].dataMale.length > 0)  {
+            } else if (!isFemale && layers[i].dataMale.length > 0)  {
                 images = string(abi.encodePacked(
                     images,
                     imgStart,

@@ -11,6 +11,16 @@ describe("PunkBlocks", function () {
 
     describe("FullTest", function () {
 
+        // uncomment if running on mainnet to test svgFromPunkID
+        it("Get SVG by Punk", async function () {
+
+
+            svg = await blocks.svgFromPunkID(8348); // 8348
+            console.log("original punk: "+svg);
+
+        });
+
+
         it("Get SVGs", async function () {
 
             let attributes = ["Male 2", "Goat", "Smile", "Do-rag", "3D Glasses", "Rosy Cheeks", "Clown Eyes Green", "Pipe"];
@@ -37,9 +47,10 @@ describe("PunkBlocks", function () {
             svg = await blocks.svgFromIDs([10, 71, 12]);
             console.log(svg);
 
-            // uncomment if running on mainnet to test svgFromPunkID
-            //svg = await blocks.svgFromPunkID(8348);
-            //console.log("moo: "+svg);
+            // 45 is an m  only trait (Top Hat), it should not render on f
+           svg = await blocks.svgFromIDs([77,5,45]);
+
+            console.log(svg);
 
 
         });
@@ -54,6 +65,8 @@ describe("PunkBlocks", function () {
             console.log(svg);
 
         });
+
+
     })
 
 

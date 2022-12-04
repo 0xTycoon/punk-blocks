@@ -71,19 +71,22 @@ function svgFromPunkID(uint256 _tokenID) external view returns (string memory);
 * @dev svgFromNames returns the svg data as a string
 * @param _attributeNames a list of attribute names, eg "Male 1", "Goat"
 *    must have at least 1 layer 0 attribute (eg. Male, Female, Alien, Ape, Zombie)
+*    e.g. ["Male 1","Goat"]
 */
 function svgFromNames(string[] calldata _attributeNames) external view returns (string memory);
 
 /**
 * @dev svgFromKeys returns the svg data as a string
 * @param _attributeKeys a list of attribute names that have been hashed,
-*    eg keccak256("Male 1"), keccak256("Goat")
+*    i.e. keccak256("Male 1"), keccak256("Goat")
 *    must have at least 1 layer 0 attribute (eg. keccak256("Male"))
+*    e.g. ["0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283","0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a"]
 */
 function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (string memory);
 
 /**
-* @dev svgFromIDs returns the svg data as a string
+* @dev svgFromIDs returns the svg data as a string.
+*  e.g. [9,55,99]
 * @param _ids uint256 ids of an attribute, by it's index of creation
 */
 function svgFromIDs(uint256[] calldata _ids) external view returns (string memory);
@@ -96,6 +99,7 @@ function svgFromIDs(uint256[] calldata _ids) external view returns (string memor
 * @param _dataMale png data for the male version, 24x24
 * @param _dataFemale png data for the female version, 24x24
 * @param _layer 0 to 12, corresponding to the Layer enum type.
+* @param _name the name of the trait, Camel Case. e.g. "Luxurious Beard"
 */
 function registerBlock(
     bytes calldata _dataMale,
