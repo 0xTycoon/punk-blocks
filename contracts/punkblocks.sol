@@ -46,7 +46,6 @@ Further documentation:
 https://github.com/0xTycoon/punk-blocks
 
 */
-
 contract PunkBlocks {
     // Layer is in the order of rendering
     enum Layer {
@@ -768,6 +767,9 @@ contract PunkBlocks {
             require (_dataMale.length + _dataFemale.length > 0, "no data");
             require (b.dataMale.length + b.dataFemale.length == 0, "slot taken");
         }
+        if (_layer==0 && _dataMale.length > 0 && _dataFemale.length > 0) {
+            revert("layer0 cannot have both versions");
+        }
         if (_dataMale.length > 0) {
             require (_validatePng(_dataMale), "invalid m png");
             b.dataMale = _dataMale;
@@ -891,8 +893,8 @@ contract PunkBlocks {
     * @dev svgFromIDs returns the svg data as a string
     *   e.g. [9,55,99]
     *   One of the elements must be must be a layer 0 block.
-    *    This element decides what version of image to use for the higher layers
-    *    (dataMale or dataFemale)
+    *   This element decides what version of image to use for the higher layers
+    *   (dataMale or dataFemale)
     * @param _ids uint256 ids of an attribute, by it's index of creation
     */
     function svgFromIDs(uint256[] calldata _ids) external view returns (string memory) {
