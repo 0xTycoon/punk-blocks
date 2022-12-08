@@ -160,10 +160,14 @@ palette** rather than an RGBA, using a single entry for the transparency,
 with a low bit-depth. E.g. You could use a bit-depth of 2 if you have 4 colors,
 or 4 if you have 16. 
 
-You can use the [generator](./generator/) Go program as an example.
+You can use the [generator](./generator/) Go program to prepare png images.
 It reads some blocks from a source png file and breaks them down to 24x24
 images. Each image is then saved as an optimized png, then the Solidity code 
 is generated with the help of a sprite sheet data in a CSV format.
+
+#### Simple UI
+
+Here is a simple web UI for registering new blocks with the contract
 
 ### License
 
