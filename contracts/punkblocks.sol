@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
 // Version: v0.0.2
+// Note: The MIT license is for the source code only. Images registered through
+// this contract retain all of their owner's rights. This contract
+// is a non-profit "library" project and intended to archive & preserve punk
+// images, so that they can become widely accessible for decentralized
+// applications, including marketplaces, wallets, galleries, etc.
 pragma solidity ^0.8.17;
 /**
 
@@ -975,6 +980,21 @@ contract PunkBlocks {
             images,
             end
         ));
+    }
+
+    /**
+    * @dev getBlocks returns a sequential list of blocks in a single call
+    * @param _fromID is which id to begin from
+    * @param _count how many items to retrieve.
+    * @return Block[] list of blocks, uint256 next id
+    */
+    function getBlocks(uint _fromID, uint _count) external view returns(Block[] memory, uint256) {
+        Block[] memory ret = new Block[](_count);
+        while (_count != 0) {
+            ret[_count-1] = blocks[index[_fromID + _count -1]];
+            _count--;
+        }
+        return (ret, nextId);
     }
 }
 // IAttrParser implemented by 0x4e776fCbb241a0e0Ea2904d642baa4c7E171a1E9

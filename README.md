@@ -70,23 +70,32 @@ function svgFromPunkID(uint256 _tokenID) external view returns (string memory);
 /**
 * @dev svgFromNames returns the svg data as a string
 * @param _attributeNames a list of attribute names, eg "Male 1", "Goat"
-*    must have at least 1 layer 0 attribute (eg. Male, Female, Alien, Ape, Zombie)
-*    e.g. ["Male 1","Goat"]
+*   must have at least 1 layer 0 attribute (eg. Male, Female, Alien, Ape, Zombie)
+*   e.g. ["Male 1","Goat"]
+*   Where "Male 1" is a layer 0 attribute, that decides what version of
+*   image to use for the higher
+*   layers (dataMale or dataFemale)
 */
 function svgFromNames(string[] calldata _attributeNames) external view returns (string memory);
 
 /**
 * @dev svgFromKeys returns the svg data as a string
 * @param _attributeKeys a list of attribute names that have been hashed,
-*    i.e. keccak256("Male 1"), keccak256("Goat")
-*    must have at least 1 layer 0 attribute (eg. keccak256("Male"))
-*    e.g. ["0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283","0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a"]
+*    eg keccak256("Male 1"), keccak256("Goat")
+*    must have at least 1 layer 0 attribute (eg. keccak256("Male 1")) which
+*    decides what version of image to use for the higher layers
+*    (dataMale or dataFemale)
+*    e.g. ["0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283",
+*    "0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a"]
 */
 function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (string memory);
 
 /**
-* @dev svgFromIDs returns the svg data as a string.
-*  e.g. [9,55,99]
+* @dev svgFromIDs returns the svg data as a string
+*   e.g. [9,55,99]
+*   One of the elements must be must be a layer 0 block.
+*   This element decides what version of image to use for the higher layers
+*   (dataMale or dataFemale)
 * @param _ids uint256 ids of an attribute, by it's index of creation
 */
 function svgFromIDs(uint256[] calldata _ids) external view returns (string memory);
@@ -155,6 +164,18 @@ You can use the [generator](./generator/) Go program as an example.
 It reads some blocks from a source png file and breaks them down to 24x24
 images. Each image is then saved as an optimized png, then the Solidity code 
 is generated with the help of a sprite sheet data in a CSV format.
+
+### License
+
+MIT
+
+Note: The MIT license is for the source code only. Images registered through
+this contract retain their owner's rights, whatever they may be. This contract
+is a non-profit "library" project and intended to archive & preserve punk
+images, so that they can become widely accessible for decentralized apps,
+including marketplaces, wallets, galleries, derivative works, research,
+and other uses, as implied by fair-use or granted with permission from the
+copyright owner.
 
 # Demo
 

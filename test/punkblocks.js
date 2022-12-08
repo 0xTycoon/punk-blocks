@@ -55,9 +55,11 @@ describe("PunkBlocks", function () {
 
         });
 
+        const fromHexString = (hexString) =>
+            Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+
         it("Create block", async function () {
-            const fromHexString = (hexString) =>
-                Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
+
             expect(await blocks.registerBlock(fromHexString("89504e470d0a1a0a0000000d4948445200000018000000180403000000125920cb00000015504c5445000000000000ff00008b532c5626007237094a1201cf76e6130000000174524e530040e6d8660000004c4944415478da62a03160141414807384949414e112ca4a4a4a302946255c1c2115272517384731484914c61154c26380102e19b5343807c5390c42082d208b0419905c2d80c901040000ffff2f3c090f8ffce8ac0000000049454e44ae426082"), new Uint8Array(0), 0, "Devil 1")).to.emit(blocks, "NewBlock");
 
             let attributes = ["Devil 1", "Goat", "Smile", "Do-rag", "3D Glasses", "Rosy Cheeks", "Clown Eyes Green", "Pipe"];
@@ -80,6 +82,13 @@ describe("PunkBlocks", function () {
                 "invalid m png"
             );
 
+        });
+
+        it("Grab blocks", async function () {
+            let b = await blocks.getBlocks(0, 10);
+            expect(b[0].length).to.equal(10);
+            //console.log(b);
+            expect(b[0][0]["dataMale"]).to.equal(("0x89504e470d0a1a0a0000000d4948445200000018000000180403000000125920cb00000012504c5445000000000000713f1d8b532c5626007237092b4acd040000000174524e530040e6d8660000004f4944415478da62a00a1014141480b11995949414611c2165252525989490113247092747c549c945006698629092a800c264b8324674030489315a49118f3284ab9590fc23045783cc01040000ffffd8690b6ca3604b190000000049454e44ae426082"));
         });
 
 

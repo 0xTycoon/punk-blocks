@@ -1,0 +1,298 @@
+<html lang="en">
+<head>
+    <title>Punk Block demo</title>
+    <style>
+        body {
+            background: whitesmoke;
+            max-width: 500px;
+            margin: auto;
+            margin-top:5em;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<h1>Register a New Image</h1>
+<form>
+    <div>
+        <label>
+            24x24 png: <input type="file" id="file-selector">
+        </label>
+        <div>
+            <img id="output" width="24" height="24" >
+        </div>
+    </div>
+    <div>
+        <label>
+            Attribute Name: <input type="text" id="attribute-name"> (Tip: Use "Camel Case")
+        </label>
+    </div>
+    <div>
+        <label><input type="radio" value="m" name="morf" id="male"> Male</label> | <label><input type="radio" value="f" name="morf" id="female"> Female</label>
+    </div>
+    <div>
+        <label>
+            Layer Level:
+            <select id="layer">
+                <option value="404">[Select]</option>
+                <option value="0">0 - Base Face</option>
+                <option value="1">1 - Cheeks</option>
+                <option value="2">2 - Blemish</option>
+                <option value="3">3 - Hair</option>
+                <option value="4">4 - Beard</option>
+                <option value="5">5 - Eyes</option>
+                <option value="6">6 - Eyewear</option>
+                <option value="7">7 - Nose</option>
+                <option value="8">8 - Mouth</option>
+                <option value="9">9 - MouthProp</option>
+                <option value="10">10 - Earring</option>
+                <option value="11">11 - Headgear</option>
+                <option value="12">12 - Neck</option>
+            </select>
+        </label>
+    </div>
+    <div style="padding: 1em;">
+        <input type="submit" id="register" value="Register">
+    </div>
+
+</form>
+
+<p id="status" style="font-weight: bold"></p>
+
+<hr>
+<a href="https://github.com/0xTycoon/punk-blocks">Get me back to home</a>
+
+</body>
+<script>
+    let provider, signer, pb;
+</script>
+<script type="module">
+    import {ethers} from "./js/ethers-5.2.esm.min.js";
+
+    async function run() {
+
+        provider = new ethers.providers.Web3Provider(window.ethereum)
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+
+        console.log(signer);
+        console.log("hi");
+
+        console.log(await provider.getBlockNumber());
+
+
+        const punkBlocksAddress = "0xf17Fbd2B05387ac32d8D0938Ee0C08684D80D6d2";
+
+        const abi = [{
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        }, {
+            "anonymous": false,
+            "inputs": [{
+                "indexed": false,
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }, {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }],
+            "name": "NewBlock",
+            "type": "event"
+        }, {
+            "inputs": [{
+                "internalType": "bytes",
+                "name": "_dataMale",
+                "type": "bytes"
+            }, {
+                "internalType": "bytes",
+                "name": "_dataFemale",
+                "type": "bytes"
+            }, {
+                "internalType": "uint8",
+                "name": "_layer",
+                "type": "uint8"
+            }, {"internalType": "string", "name": "_name", "type": "string"}],
+            "name": "registerBlock",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "inputs": [{
+                "internalType": "uint256[]",
+                "name": "_ids",
+                "type": "uint256[]"
+            }],
+            "name": "svgFromIDs",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "inputs": [{
+                "internalType": "bytes32[]",
+                "name": "_attributeKeys",
+                "type": "bytes32[]"
+            }],
+            "name": "svgFromKeys",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "inputs": [{
+                "internalType": "string[]",
+                "name": "_attributeNames",
+                "type": "string[]"
+            }],
+            "name": "svgFromNames",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "inputs": [{
+                "internalType": "uint256",
+                "name": "_tokenID",
+                "type": "uint256"
+            }],
+            "name": "svgFromPunkID",
+            "outputs": [{
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }],
+            "stateMutability": "view",
+            "type": "function"
+        }];
+
+// The Contract object
+
+        pb = new ethers.Contract(punkBlocksAddress, abi, provider);
+
+        let punk1 = await pb.svgFromIDs([5, 77, 45]);
+        console.log(punk1);
+
+        console.log("=====");
+
+        //let punk2 = await pb.svgFromPunkID(5);
+        //console.log(punk1);
+
+
+        provider.on("block", (b) => console.log("new block", b));
+
+    }
+
+
+
+    run();
+</script>
+<script>
+
+    const broken = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwMCAxMDAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAwIDEwMDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8bWV0YWRhdGE+IFN2ZyBWZWN0b3IgSWNvbnMgOiBodHRwOi8vd3d3Lm9ubGluZXdlYmZvbnRzLmNvbS9pY29uIDwvbWV0YWRhdGE+CjxnPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMDAwMDAwLDUxMS4wMDAwMDApIHNjYWxlKDAuMTAwMDAwLC0wLjEwMDAwMCkiPjxwYXRoIGQ9Ik0xMzI0LjYsNDk4MS4zYy03LjItMTYuNy05LjYtMjIyMy4yLTcuMi00OTAxLjJsNy4yLTQ4NzAuMWgzNjczLjVoMzY3My41bDcuMiwyMTM3LjFjMi40LDExNzIuNiwwLDIxMzQuNy03LjIsMjEzNC43Yy05LjYsMC0xODA5LjItMTI2MS4yLTE5MTYuOS0xMzQyLjZjLTE0LjQtMTItMjU2LjEsMjk0LjQtNjU1LjcsODQwYy01NDAuOCw3MzcuMS02MzYuNiw4NTYuNy02NjcuNyw4MzAuNGMtMjEuNS0xNi44LTMzNy41LTI4MC03MDMuNi01ODMuOWMtMzY2LjItMzA2LjMtNjcyLjUtNTU3LjYtNjg0LjQtNTU3LjZjLTkuNiwwLTI4MCwyNDQuMS02MDAuNyw1NDAuOGwtNTg2LjMsNTQzLjNMMjQ5MC0yNjIuMWwtMzY2LjItMTYuOEwyNDQ5LjMtNi4xbDMyNS41LDI3NS4ybDYzOS00MDkuMmMzNTEuOC0yMjUsNjU1LjctNDE0LDY3NC45LTQxOC44YzIxLjUtNC44LDM2MS40LDIyNSw3ODkuNyw1NDAuOWM0MTQsMzAxLjUsNzYxLDU0My4yLDc3MC42LDUzOC40YzkuNi03LjIsMjg0LjgtMzYxLjQsNjA3LjktNzg5LjdjMzI1LjUtNDI2LDYwMC43LTc3Myw2MTUtNzY4LjJjMTIsMi40LDQyMy42LDMzMi43LDkxNi42LDczMi4zbDg5NSw3MjcuNXYxMjcwLjh2MTI2OC40TDc2NjEuNiwzOTg1LjdMNjYzNy40LDUwMTBIMzk4NS44QzE4ODYuOSw1MDEwLDEzMzEuNyw1MDAyLjgsMTMyNC42LDQ5ODEuM3ogTTYyMjMuMywzNTgxLjNsNy4yLTEwMjQuM2wxMDI0LjMtNy4ybDEwMjEuOS00Ljh2LTk2NC40VjYxOC41TDc2MTguNiw4MC4xYy0zNjEuNC0yOTYuOC02NjcuNy01MzguNS02NzkuNy01MzguNWMtMTIsMC0yNTMuNywzMDEuNS01MzMuNyw2NzAuMWMtMjgwLDM2OC41LTU0OCw3MjAuMy01OTUuOSw3ODIuNmwtODYuMiwxMTIuNWwtODE2LTU5NS45TDQwOTEuMS04Ny40bC02NzQuOSw0MzAuOGwtNjc0LjksNDMwLjhsLTEyMi4xLTEwMi45Yy02Ny01Ny41LTI5NC40LTI0Ni41LTUwNS00MjMuNkwxNzMxLjQtNzAuN2wtNy4yLDIzMDdjLTIuNCwxMjY4LjQsMCwyMzIxLjQsNy4yLDIzMzguMWM3LjIsMjEuNSw0ODEsMjguNywyMjQ5LjYsMjguN2gyMjM3LjZMNjIyMy4zLDM1ODEuM3ogTTczNzIuMSwzNzAwLjljMzkyLjUtMzkyLjUsNzEzLjItNzIwLjMsNzEzLjItNzMyLjNjMC05LjYtMzI1LjUtMTQuNC03MjIuOC0xMmwtNzI1LjEsNy4ybC03LjIsNzI1LjFjLTIuNCwzOTcuMywyLjQsNzIyLjcsMTIsNzIyLjdTNjk4Miw0MDkxLDczNzIuMSwzNzAwLjl6IE0zMzYxLjEtMTI3NC40YzU5My41LTU1Mi44LDY2Mi45LTYwNy45LDY5OC44LTU3Ni44YzQwLjcsMzMuNSwxMDI5LjEsODQ0LjgsMTIyNy43LDEwMDUuMWwxMTAuMSw4OC42bDYxNS04MzcuNmw2MTUtODM3LjZsMTEyLjUsNzYuNmM2Mi4yLDQzLjEsNDE4LjgsMjkyLDc5NC41LDU1Mi44YzM3NS43LDI2My4zLDY5Ni40LDQ4My40LDcxMy4yLDQ4OC4yYzIzLjksOS42LDI4LjctMjk5LjEsMjMuOS0xNTI2LjhsLTcuMi0xNTQxLjJINDk5OC4xSDE3MzEuNGwtNy4yLDE4MzcuOWMtNC44LDE0NTkuOCwwLDE4MzUuNiwyMy45LDE4MzcuOWM2NC42LDcuMiw2ODQuNCwzOC4zLDgxNi4xLDQwLjdsMTM4LjgsNC44TDMzNjEuMS0xMjc0LjR6Ii8+PC9nPjwvZz4KPC9zdmc+';
+    const output = document.getElementById('output');
+    const status = document.getElementById('status');
+    const layer = document.getElementById('layer');
+    const male = document.getElementById('male');
+    const female = document.getElementById('female');
+    const att = document.getElementById('attribute-name');
+
+    function _arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    let blockData;
+    if (window.FileList && window.File && window.FileReader) {
+        document.getElementById('file-selector').addEventListener('change', event => {
+            output.src = '';
+            status.textContent = '';
+            const file = event.target.files[0];
+            if (!file.type) {
+                status.textContent = 'Error: The File.type property does not appear to be supported on this browser.';
+                return;
+            }
+            if (!file.type.match('image.*')) {
+                status.textContent = 'Error: The selected file does not appear to be an image.'
+                return;
+            }
+            const reader = new FileReader();
+            reader.addEventListener('load', event => {
+
+                output.src = "data:image/png;base64," + _arrayBufferToBase64(event.target.result);
+
+                    setTimeout(function()  {
+                        // it seems like the setting of output.src is async, but not sure what event to listen on?
+                        if (output.naturalWidth + output.naturalHeight !== 48) {
+                            output.src = broken;
+                            status.textContent = "Image size must be 24x24";
+                        }
+                    }, 500 )
+
+
+                console.log("load event!");
+                blockData = new Uint8Array(event.target.result);
+            });
+
+            // btoa(new Uint8Array([89,88]))
+            //reader.readAsDataURL(file);
+            reader.readAsArrayBuffer(file)
+        });
+    }
+
+    async function register(e) {
+        e.preventDefault();
+        if (layer.value == 404) {
+            status.textContent = "Please select a layer";
+            return;
+        }
+
+        if (att.value.trim() === "") {
+            status.textContent = "Please add a name";
+            return;
+        }
+
+        if (output.naturalWidth + output.naturalHeight !== 48) {
+            status.textContent = "The image height/width needs to be 24x24";
+            return;
+        }
+
+        // save blockdata
+
+        //singer.
+        let dm = [], df = [];
+        if (document.querySelector(`[name="morf"]:checked`).value === "m") {
+            dm = blockData;
+        } else {
+            df = blockData
+        }
+
+        await pb.connect(signer).registerBlock(dm, df, layer.value, att.value);
+        document.querySelector(`form`).reset();
+        output.src = "";
+
+
+    }
+
+    document.getElementById("register").addEventListener("click", register);
+</script>
+</html>
