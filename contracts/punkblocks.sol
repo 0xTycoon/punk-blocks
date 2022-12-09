@@ -956,7 +956,7 @@ contract PunkBlocks {
         if (layers[0].dataFemale.length > 0) {
             isFemale = true;
         } else {
-            require (layers[0].dataMale.length > 0, "base layer attribute missing");
+            require (layers[0].dataMale.length > 0, "base layer attribute unspecified");
         }
         for (uint i = 0; i < 13; i++) {
             if (isFemale && layers[i].dataFemale.length > 0) {
