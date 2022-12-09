@@ -158,16 +158,24 @@ vice-versa.
 Preparing the png for upload can be tricky. It's best to use an **indexed 
 palette** rather than an RGBA, using a single entry for the transparency,
 with a low bit-depth. E.g. You could use a bit-depth of 2 if you have 4 colors,
-or 4 if you have 16. 
+or 4 if you have 16. Confused? Here is a 
+[complete guide](https://optipng.sourceforge.net/pngtech/optipng.html) about 
+png optimization.
 
-You can use the [generator](./generator/) Go program to prepare png images.
+There are several nifty png optimization tools available for Linux, such as
+[optipng](https://www.cyberciti.biz/faq/linux-unix-optimize-lossless-png-images-with-optipng-command/)
+
+What was used here? Well...
+A simple Go program was custom-made to prepare the optimized png images. see: 
+[generator](./generator/) .
 It reads some blocks from a source png file and breaks them down to 24x24
 images. Each image is then saved as an optimized png, then the Solidity code 
 is generated with the help of a sprite sheet data in a CSV format.
 
-#### Simple UI
+### Simple UI
 
-Here is a simple web UI for registering new blocks with the contract
+Here is a simple web UI for generating punks from blocks, or 
+viewing and registering new blocks with the contract.
 
 ### License
 
