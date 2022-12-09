@@ -9,12 +9,82 @@
             margin-top:5em;
         }
 
+        .mono {
+            font-family: monospace;
+        }
+
 
     </style>
 </head>
 <body>
 
+<h1>Get SVG from Attributes</h1>
+<h3 class="mono">function svgFromNames(string[] calldata _attributeNames) external view returns (string memory)</h3>
+
+<form>
+    <label>
+        Attributes, comma delimited, case-sensitive<br>
+        <textarea  id="svgFromNames" cols="50" rows="5">Male 1, Pipe, Luxurious Beard, Earring</textarea> <br>(eg. Male 1, Pipe, 3D Glass)
+    </label>
+    <div>
+        <input type="button" id="svgFromNames-button" value="Generate">
+    </div>
+
+</form>
+<div id="svgFromNames-result"></div>
+
+<hr>
+<h1>Get SVG from Keys</h1>
+<h3 class="mono">function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (string memory)</h3>
+
+<form>
+    <label>
+        Keys, comma delimited, lower-case<br>
+        <textarea  id="svgFromKeys" cols="50" rows="5">0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283,0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a</textarea> <br>
+    </label>
+    <div>
+        <input type="button" id="svgFromKeys-button" value="Generate">
+    </div>
+
+</form>
+<div id="svgFromKeys-result"></div>
+<hr>
+<h1>Get SVG from IDs</h1>
+<h3 class="mono">function svgFromIDs(uint256[] calldata _ids) external view returns (string memory)</h3>
+
+<form>
+    <label>
+        IDs, comma delimited, lower-case<br>
+        <textarea  id="svgFromIDs" cols="50" rows="5">9,55,99</textarea> <br>
+    </label>
+    <div>
+        <input type="button" id="svgFromIDs-button" value="Generate">
+    </div>
+
+</form>
+<div id="svgFromIDs-result"></div>
+
+
+<hr>
+<h1>Get SVG from Punk ID</h1>
+<h3 class="mono">svgFromPunkID(uint256 _tokenID) external view returns (string memory)</h3>
+
+<form>
+    <label>
+        A single CryptoPunk ID, 0 to 9999<br>
+        <textarea  id="svgFromPunkID" cols="50" rows="5">8348</textarea> <br>
+    </label>
+    <div>
+        <input type="button" id="svgFromPunkID-button" value="Generate">
+    </div>
+
+</form>
+<div id="svgFromPunkID-result"></div>
+
+
+<hr>
 <h1>Register a New PNG Image</h1>
+<h3>This will register a new attribute on-chain.</h3>
 <form>
     <div>
         <label>
@@ -293,6 +363,40 @@
 
     }
 
+    async function svgFromNames(e) {
+        e.preventDefault();
+        const text = document.getElementById('svgFromNames');
+        const attributes = text.value.split(/[, \n]+/);
+        let svg = await pb.svgFromNames(attributes);
+        document.getElementById('svgFromNames-result').innerHTML = svg;
+    }
+
+    async function svgFromKeys(e) {
+        e.preventDefault();
+        const text = document.getElementById('svgFromKeys');
+        const attributes = text.value.split(/[, \n]+/);
+        document.getElementById('svgFromKeys-result').innerHTML= await pb.svgFromKeys(attributes);
+    }
+
+    async function svgFromIDs(e) {
+        e.preventDefault();
+        const text = document.getElementById('svgFromIDs');
+        const attributes = text.value.split(/[, \n]+/);
+        document.getElementById('svgFromIDs-result').innerHTML= await pb.svgFromIDs(attributes);
+    }
+
+    async function svgFromPunkID(e) {
+        e.preventDefault();
+        const text = document.getElementById('svgFromPunkID').value;
+        //const attributes = text.value.split(/[, \n]+/);
+        document.getElementById('svgFromPunkID-result').innerHTML= await pb.svgFromPunkID(text.trim());
+    }
+
     document.getElementById("register").addEventListener("click", register);
+    document.getElementById("svgFromNames-button").addEventListener("click", svgFromNames);
+    document.getElementById("svgFromKeys-button").addEventListener("click", svgFromKeys);
+    document.getElementById("svgFromIDs-button").addEventListener("click", svgFromIDs);
+    document.getElementById("svgFromPunkID-button").addEventListener("click", svgFromPunkID);
+
 </script>
 </html>
