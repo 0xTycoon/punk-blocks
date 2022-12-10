@@ -174,8 +174,9 @@ is generated with the help of a sprite sheet data in a CSV format.
 
 ### Simple UI
 
-Here is a simple web UI for generating punks from blocks, or 
+Here is a [simple web UI](https://0xtycoon.github.io/punk-blocks/) for generating punks from blocks, or 
 viewing and registering new blocks with the contract.
+
 
 ### License
 
