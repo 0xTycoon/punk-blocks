@@ -24,7 +24,7 @@
 <form>
     <label>
         Attributes, comma delimited, case-sensitive<br>
-        <textarea  id="svgFromNames" cols="50" rows="5">Male 1, Pipe, Luxurious Beard, Earring</textarea> <br>(eg. Male 1, Pipe, 3D Glass)
+        <textarea  id="svgFromNames" cols="50" rows="5">Male 1, Pipe, Luxurious Beard, Earring</textarea> <br>(eg. Male 1, Pipe, 3D Glasses)
     </label>
     <div>
         <input type="button" id="svgFromNames-button" value="Generate">
@@ -273,7 +273,7 @@
     async function svgFromNames(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromNames');
-        const attributes = text.value.split(/[, \n]+/);
+        const attributes = text.value.split(',').map(s=>s.trim());
         let svg = await pb.svgFromNames(attributes);
         document.getElementById('svgFromNames-result').innerHTML = svg;
     }
@@ -281,21 +281,21 @@
     async function svgFromKeys(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromKeys');
-        const attributes = text.value.split(/[, \n]+/);
+        const attributes = text.value.split(',').map(s=>s.trim());
         document.getElementById('svgFromKeys-result').innerHTML= await pb.svgFromKeys(attributes);
     }
 
     async function svgFromIDs(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromIDs');
-        const attributes = text.value.split(/[, \n]+/);
+        const attributes = text.value.split(',').map(s=>s.trim());
         document.getElementById('svgFromIDs-result').innerHTML= await pb.svgFromIDs(attributes);
     }
 
     async function svgFromPunkID(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromPunkID').value;
-        //const attributes = text.value.split(/[, \n]+/);
+        //const attributes = text.value.split(',').map(s=>s.trim());
         document.getElementById('svgFromPunkID-result').innerHTML= await pb.svgFromPunkID(text.trim());
     }
 
