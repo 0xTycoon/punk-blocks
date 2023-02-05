@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-type block struct {
+type blocks struct {
 	i image.Image
 }
 
@@ -20,9 +20,9 @@ const pngHeader = "\x89PNG\r\n\x1a\n"
 var alphaChanDetected = errors.New("alpha channel present")
 
 /**
-* getPunkBlock returns a single punk building block pic 24x24
+* getPunkBlock returns a single punk building blocks pic 24x24
  */
-func (b *block) getPunkBlock(blockID int) image.Image {
+func (b *blocks) getPunkBlock(blockID int) image.Image {
 	if blockID > 132 {
 		blockID = 0
 	}
@@ -34,7 +34,7 @@ func (b *block) getPunkBlock(blockID int) image.Image {
 	return ret
 }
 
-func (b *block) load(path string) (img *image.RGBA, err error) {
+func (b *blocks) load(path string) (img *image.RGBA, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return
