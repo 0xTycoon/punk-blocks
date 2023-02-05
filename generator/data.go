@@ -133,7 +133,7 @@ var params = `0,Male 1,m,0,598
 113,Clown Eyes Green,f,5,382
 114,Cigarette,f,9,961
 115,Welding Goggles,f,6,86
-116,Mohawk Thin,f,3,Mohawk Thin
+116,Mohawk Thin,f,3,441
 117,Gold Chain,f,12,169
 118,VR,f,6,332
 119,Vape,f,9,272
@@ -146,7 +146,7 @@ var params = `0,Male 1,m,0,598
 126,Straight Hair,f,3,151
 127,Rosy Cheeks,f,1,128
 128,Half Shaved,f,3,147
-129,Mohawk Dark,f,3,429,429
+129,Mohawk Dark,f,3,429
 130,Black Lipstick,f,8,617
 131,Horned Rim Glasses,f,6,535
 132,Silver Chain,f,12,156
