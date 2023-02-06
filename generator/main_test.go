@@ -80,12 +80,99 @@ func TestGenerator(t *testing.T) {
 		}
 
 	}
+	var chosenAtt []block
+	counts := make(map[int]int)
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
-	n := r1.Intn(10000)
+	for i := 0; i < 10000; i++ {
+		chosenBase := pickBase(base, r1)
+		if chosenBase.sex == "f" {
+			chosenAtt = pickPunk(female, r1)
+		} else {
+			chosenAtt = pickPunk(male, r1)
+		}
+		println(len(chosenAtt))
+		if v, ok := counts[len(chosenAtt)]; ok {
+			counts[len(chosenAtt)] = v + 1
+		} else {
+			counts[len(chosenAtt)] = 1
+		}
 
-	// roll a base
+	}
+
+	fmt.Println("counts are:", counts)
+
+	/*
+
+		0. in solidity, keep a structure pre-configured as above.
+
+		1. get random number for index
+
+		2. using random starting index, roll a category 0. Keep rolling until one is found
+
+		3. repeat for remaining attys
+
+	*/
+}
+
+func pickPunk(set map[int][]block, r1 *rand.Rand) []block {
+
+	var chosenAtt []block
+
+	n2 := r1.Intn(10000)
+	i := (n2 % len(set)) + 1
+	catRolls := 0
+	for {
+		if _, ok := set[i]; !ok {
+			fmt.Println("zeroooo!")
+			i++
+			continue
+		}
+		j := n2 % len(set[i])
+		j = r1.Intn(len(set[i]))
+		attRolls := 0
+		catRolls++
+
+		fmt.Println("cat roll:", catRolls, ", i:", i)
+		for {
+			n2 = r1.Intn(10000)
+			fmt.Println("attRoll, ", attRolls, "cat len", len(set[i]), " n:", set[i][j].name, " ", n2)
+
+			if set[i][j].freq >= n2 {
+				chosenAtt = append(chosenAtt, set[i][j])
+				fmt.Println("picked!", set[i][j])
+				attRolls = 0
+				j = 0
+				break
+			}
+			j++
+			attRolls++
+			if attRolls >= len(set[i]) {
+				break
+			}
+
+			if j >= len(set[i]) {
+				j = 0
+			}
+		}
+		if catRolls >= len(set) {
+			fmt.Println("max catRolls, ", catRolls)
+			catRolls = 0
+			attRolls = 0
+			break
+		}
+		i++
+
+		if i > 12 {
+			i = 1 // wrap around the categories
+		}
+	}
+	return chosenAtt
+}
+
+func pickBase(base map[int][]block, r1 *rand.Rand) block {
 	var chosenBase block
+	n := r1.Intn(10000)
 	i := n % len(base[0]) // random index (i) to start from
 
 	fmt.Println("i is:", i)
@@ -102,97 +189,5 @@ func TestGenerator(t *testing.T) {
 		}
 	}
 	fmt.Println("chosen base:", chosenBase)
-	_ = chosenBase
-	var chosenAtt []block
-
-	n2 := r1.Intn(10000)
-	i = (n2 % len(male)) + 1
-	catRolls := 0
-	for {
-		j := n2 % len(male[i])
-		attRolls := 0
-		catRolls++
-
-		fmt.Println("cat roll:", catRolls, ", i:", i)
-		for {
-			n2 = r1.Intn(10000)
-			fmt.Println("attRoll, ", attRolls, "cat len", len(male[i]), " n:", male[i][j].name, " ", n2)
-
-			if male[i][j].freq >= n2 {
-				chosenAtt = append(chosenAtt, male[i][j])
-				fmt.Println("picked!", male[i][j])
-				attRolls = 0
-				j = 0
-				break
-			}
-
-			j++
-
-			attRolls++
-			if attRolls >= len(male[i]) {
-				break
-			}
-
-			if j >= len(male[i]) {
-				j = 0
-			}
-		}
-		if catRolls >= len(male) {
-			fmt.Println("max catRolls, ", catRolls)
-			catRolls = 0
-			attRolls = 0
-			break
-		}
-		i++
-
-		if i > len(male) {
-			i = 1 // wrap around the categories
-		}
-	}
-	/*
-		for _, cat := range male {
-			n2 := r1.Intn(10000)
-			i = n2 % len(cat)
-			catRolls := 0
-			for {
-				n2 = r1.Intn(10000)
-				if cat[i].freq >= n2 {
-					chosenAtt = append(chosenAtt, cat[i])
-				}
-				catRolls++
-				if catRolls == len(cat) {
-					break
-				}
-				i++
-				if i >= len(cat) {
-					i = 0
-				}
-			}
-
-			/*
-
-			/*
-				for _, atty := range cat {
-
-					if atty.freq >= n2 {
-						chosenAtt = append(chosenAtt, atty)
-					}
-				}
-		}
-
-	*/
-
-	fmt.Println("chosen atty:", chosenAtt)
-
-	/*
-
-		0. in solidity, keep a structure pre-configured as above.
-
-		1. get random number for index
-
-		2. using random starting index, roll a category 0. Keep rolling until one is found
-
-		3. repeat for remaining attys
-
-	*/
+	return chosenBase
 }
