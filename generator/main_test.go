@@ -60,55 +60,6 @@ type block struct {
 	stat  map[int]int // base id => frequency count
 }
 
-type item struct {
-	id    int
-	name  string
-	layer int
-	pop   int
-	popm  int //
-	popf  int
-	dist  map[int]int // base layer => distribution
-
-}
-
-func TestGenerator2(t *testing.T) {
-	csvReader := csv.NewReader(bytes.NewReader([]byte(params2)))
-	records, _ := csvReader.ReadAll()
-
-	bases := make(map[int]item)
-	//attributes := make(map[int]item)
-
-	for r := range records {
-		pop, _ := strconv.Atoi(records[r][3])
-
-		if r < 11 {
-			bases[r] = item{
-				id:    r,
-				name:  records[r][1],
-				layer: 0,
-				pop:   pop,
-			}
-		}
-	}
-}
-
-var distribution map[string][]int
-
-func getDistributionData() map[string][]int {
-	distribution := make(map[string][]int)
-	csvReader := csv.NewReader(bytes.NewReader([]byte(distributionData)))
-	records, _ := csvReader.ReadAll()
-	for i := range records {
-		var counts []int
-		for n := 0; n < 8; n++ {
-			v, _ := strconv.Atoi(records[i][n+5])
-			counts = append(counts, v)
-		}
-		distribution[records[i][1]] = counts
-	}
-	return distribution
-}
-
 func parseIntSlice(in []string) []int {
 	out := make([]int, len(in))
 	for l := range in {
@@ -197,11 +148,12 @@ func TestGenerator(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	distribution = getDistributionData()
+
 	csvReader := csv.NewReader(bytes.NewReader([]byte(params2)))
 	records, err := csvReader.ReadAll()
-	male := make(map[int][]block)
-	female := make(map[int][]block)
+	//male := make(map[int][]block)
+	//female := make(map[int][]block)
+	attributes := make(map[int][]block)
 	//attributes := make(map[int]block)
 	bases := make(map[int][]block)
 
@@ -223,7 +175,7 @@ func TestGenerator(t *testing.T) {
 			if i < 11 {
 				blocks = bases
 			} else {
-				blocks = male
+				blocks = attributes
 			}
 			blocks[cat] = append(blocks[cat], block{
 				i:     allBlocks.getPunkBlock(id),
@@ -240,7 +192,7 @@ func TestGenerator(t *testing.T) {
 			if i < 11 {
 				blocks = bases
 			} else {
-				blocks = female
+				blocks = attributes
 			}
 			blocks[cat] = append(blocks[cat], block{
 				i:     allBlocks.getPunkBlock(id),
@@ -258,7 +210,7 @@ func TestGenerator(t *testing.T) {
 	sum := 0
 	total := 0
 	for i := 0; i < 1; i++ {
-		counts, zbcount := pickCollection(bases, female, male)
+		counts, zbcount := pickCollection(bases, attributes)
 		if zbcount > 0 {
 			total += 1
 		}
@@ -291,9 +243,8 @@ func TestGenerator(t *testing.T) {
 
 func pickCollection(
 	base map[int][]block,
-	female map[int][]block,
-	male map[int][]block,
-	//attributes map[int]block,
+	attributes map[int][]block,
+
 ) (map[int]int, int) {
 	var chosenAtt []block
 	counts := make(map[int]int)
@@ -303,12 +254,7 @@ func pickCollection(
 	for i := 0; i < 10000; i++ {
 		chosenBase := pickBase(base, r1)
 		count := pickCount(r1)
-		//chosenAtt = pickPunkToAttributes(attributes, r1, count, chosenBase)
-		if chosenBase.sex == "m" {
-			chosenAtt = pickPunk(male, chosenBase, r1, count)
-		} else {
-			chosenAtt = pickPunk(female, chosenBase, r1, count)
-		}
+		chosenAtt = pickPunk(attributes, chosenBase, r1, count)
 		for moo := range chosenAtt {
 			attrCounts[chosenAtt[moo].name]++
 		}
@@ -341,41 +287,6 @@ func isExcluded(base string, cat int) bool {
 }
 
 var attrCounts = make(map[string]int)
-
-func pickPunkToAttributes(
-	blocks map[int]block,
-	r1 *rand.Rand,
-	desiredCount int,
-	base block,
-) []block {
-	var chosenAtt []block
-	if desiredCount == 0 {
-		return chosenAtt
-	}
-	catPicks := make(map[int]bool)
-	rolls := 0
-	for {
-		i := r1.Intn(122) + 11
-		pick := blocks[i]
-		if pick.sex != base.sex {
-			continue
-		}
-
-		if _, ok := catPicks[pick.cat]; ok {
-			rolls++
-			continue
-		}
-		n2 := r1.Intn(10000)
-		if punkProbability(pick, base) >= n2 {
-			chosenAtt = append(chosenAtt, pick)
-			catPicks[pick.cat] = true // remember that this category was picked
-		}
-		rolls++
-		if len(chosenAtt) == desiredCount {
-			return chosenAtt
-		}
-	}
-}
 
 func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) []block {
 
@@ -446,21 +357,7 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 		i++
 
 	}
-	//return chosenAtt
-}
 
-func punkProbability(pick block, base block) int {
-	ret := 0
-	i := 0
-	if base.sex == "f" {
-		i += 4
-	}
-	n, _ := strconv.Atoi(base.name)
-	i += n - 1
-	if v, ok := distribution[pick.name]; ok {
-		return v[i]
-	}
-	return ret
 }
 
 var counts = [8]int{8, 333, 3560, 4501, 1420, 166, 11, 1}
