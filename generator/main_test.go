@@ -14,6 +14,10 @@ import (
 	"time"
 )
 
+// stogie male, stogie female, earphone fem, earphone male, employee hat male, employee hat fem, headphones male
+// headphone fem, headphone red male, headphones red fem, headphones yell fem, gasmask m, gasmask f, googles m, goggles f
+// pen f, pencil m, pencil f, red hat m, red hat f, white hat m, suit m
+// suit f,
 func TestThis(t *testing.T) {
 	hash := solsha3.SoliditySHA3(
 		// types
@@ -29,35 +33,14 @@ func TestThis(t *testing.T) {
 	//dumpBlocks()
 }
 
-func TestTrial(t *testing.T) {
-
-	picked := 0
-	s1 := rand.NewSource(time.Now().UnixNano())
-	r1 := rand.New(s1)
-	i := r1.Intn(8)
-	for {
-		n2 := r1.Intn(10000)
-		if 696 >= n2 {
-			picked++
-		}
-		i++
-		if i == 10000 {
-			break
-		}
-	}
-	fmt.Println(picked)
-
-}
-
 type block struct {
-	i     image.Image
-	id    int
-	freq  int
-	sex   string
-	name  string
-	cat   int
-	stats []int
-	stat  map[int]int // base id => frequency count
+	i    image.Image
+	id   int
+	freq int
+	sex  string
+	name string
+	cat  int
+	stat map[int]int // base id => frequency count
 }
 
 func parseIntSlice(in []string) []int {
@@ -148,63 +131,31 @@ func TestGenerator(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-
 	csvReader := csv.NewReader(bytes.NewReader([]byte(params2)))
 	records, err := csvReader.ReadAll()
-	//male := make(map[int][]block)
-	//female := make(map[int][]block)
 	attributes := make(map[int][]block)
-	//attributes := make(map[int]block)
 	bases := make(map[int][]block)
-
 	for i := 0; i < len(records); i++ {
 		cat, _ := strconv.Atoi(records[i][2]) // category
 		id, _ := strconv.Atoi(records[i][0])
 		frq, _ := strconv.Atoi(records[i][3])
 
-		// new version
-		freqm, _ := strconv.Atoi(records[i][4])
-		freqf, _ := strconv.Atoi(records[i][5])
-		freqal, _ := strconv.Atoi(records[i][6])
-		freqape, _ := strconv.Atoi(records[i][7])
-		freqzo, _ := strconv.Atoi(records[i][8])
-
 		var blocks map[int][]block
 
-		if freqm > 0 || freqal > 0 || freqape > 0 || freqzo > 0 {
-			if i < 11 {
-				blocks = bases
-			} else {
-				blocks = attributes
-			}
-			blocks[cat] = append(blocks[cat], block{
-				i:     allBlocks.getPunkBlock(id),
-				id:    id,
-				freq:  frq,
-				sex:   "m",
-				name:  records[i][1],
-				cat:   cat,
-				stats: parseIntSlice(records[i][9:13]),
-				stat:  parseIntSlice2(records[i][6:17]),
-			})
+		if i < 11 {
+			blocks = bases
+		} else {
+			blocks = attributes
 		}
-		if freqf > 0 {
-			if i < 11 {
-				blocks = bases
-			} else {
-				blocks = attributes
-			}
-			blocks[cat] = append(blocks[cat], block{
-				i:     allBlocks.getPunkBlock(id),
-				id:    id,
-				freq:  freqf,
-				sex:   "f",
-				name:  records[i][1],
-				cat:   cat,
-				stats: parseIntSlice(records[i][13:17]),
-				stat:  parseIntSlice2(records[i][6:17]),
-			})
-		}
+		blocks[cat] = append(blocks[cat], block{
+			i:    allBlocks.getPunkBlock(id),
+			id:   id,
+			freq: frq,
+			sex:  "m",
+			name: records[i][1],
+			cat:  cat,
+			stat: parseIntSlice2(records[i][6:17]),
+		})
 
 	}
 	sum := 0
@@ -225,7 +176,6 @@ func TestGenerator(t *testing.T) {
 		//25,984
 	}
 	fmt.Println("Alien beanie total:", total)
-	fmt.Println("hairExcluded:", hairExcluded)
 	fmt.Println("all:", sum)
 	sum = 0
 	/*
@@ -275,17 +225,6 @@ func pickCollection(
 	return counts, zbcount
 }
 
-var hairExcluded int
-
-func isExcluded(base string, cat int) bool {
-	return false
-	if base == "Alien" && cat == 3 {
-		hairExcluded++
-		return true // hair excluded from alien
-	}
-	return false
-}
-
 var attrCounts = make(map[string]int)
 
 func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) []block {
@@ -311,7 +250,6 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 			i++
 			continue
 		}
-
 		j := len(set[i]) - 1
 		if j > 0 {
 			// if the category has more than 1 attribute
@@ -320,21 +258,25 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 
 		attRolls := 0
 		catRolls++
-
+		if catRolls > len(set)*5 {
+			return chosenAtt // sometimes the odds of finding a match may be impossible
+		}
 		//fmt.Println("cat roll:", catRolls, ", i:", i)
 		for {
 			if attRolls >= len(set[i]) {
 				break // we rolled all attributes
 			}
-			n2 = r1.Intn(base.freq)
+
 			//fmt.Println("attRoll, ", attRolls, "cat len", len(set[i]), " n:", set[i][j].name, " ", n2)
 
-			if set[i][j].stat[base.id] >= n2 {
+			n2 = r1.Intn(base.freq)
+			freq := set[i][j].stat[base.id]
+
+			if freq != 0 && freq >= n2 {
 				chosenAtt = append(chosenAtt, set[i][j])
 				fmt.Println("picked!", set[i][j])
 				catPicked[i] = true
-				//attRolls = 0
-				//j = 0
+
 				if len(chosenAtt) == desiredCount {
 					fmt.Println("choice!", chosenAtt)
 					return chosenAtt
@@ -350,12 +292,9 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 			if j >= len(set[i]) {
 				j = 0 // wrap around the attributes
 			}
-
 		}
-
 		attRolls = 0
 		i++
-
 	}
 
 }
