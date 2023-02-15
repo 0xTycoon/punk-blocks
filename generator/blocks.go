@@ -12,7 +12,9 @@ import (
 )
 
 type blocks struct {
-	i image.Image
+	i    image.Image
+	rows int
+	cols int
 }
 
 const pngHeader = "\x89PNG\r\n\x1a\n"
@@ -23,22 +25,24 @@ var alphaChanDetected = errors.New("alpha channel present")
 * getPunkBlock returns a single punk building blocks pic 24x24
  */
 func (b *blocks) getPunkBlock(blockID int) image.Image {
-	if blockID > 132 {
+	if blockID > b.rows*b.cols {
 		blockID = 0
 	}
-	x := blockID % 10 * 24
-	y := (140 * blockID) / 1400 * 24
+	x := blockID % b.cols * 24
+	y := (b.rows * blockID) / (b.rows * 10) * 24
 	ret := b.i.(interface {
 		SubImage(r image.Rectangle) image.Image
 	}).SubImage(image.Rect(x, y, x+24, y+24))
 	return ret
 }
 
-func (b *blocks) load(path string) (img *image.RGBA, err error) {
+func (b *blocks) load(path string, rows int, cols int) (img *image.RGBA, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return
 	}
+	b.rows = rows
+	b.cols = cols
 	var ret image.Image
 	ret, err = png.Decode(f)
 	img = imageToRGBA(ret)

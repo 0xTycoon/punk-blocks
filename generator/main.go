@@ -20,7 +20,7 @@ func dumpBlocks() {
 	var allBlocks blocks
 	var err error
 	var blocksPath = "./traits-24x24.png"
-	if _, err = allBlocks.load(blocksPath); err != nil {
+	if _, err = allBlocks.load(blocksPath, 140, 10); err != nil {
 		fmt.Println(err)
 		return
 	}
