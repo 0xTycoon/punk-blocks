@@ -64,6 +64,23 @@ func (b *block) save() {
 
 }
 
+func TestMergeLayers(t *testing.T) {
+
+	csvReader := csv.NewReader(bytes.NewReader([]byte(params2)))
+	data, _ := csvReader.ReadAll()
+	for r := range data {
+		if data[r][2] == "11" {
+			data[r][2] = "3"
+		}
+	}
+
+	var b bytes.Buffer
+	csvWriter := csv.NewWriter(&b)
+	csvWriter.WriteAll(data)
+	fmt.Println(b.String())
+
+}
+
 func TestMerge(t *testing.T) {
 	nametocat := make(map[string]string)
 	csvReader := csv.NewReader(bytes.NewReader([]byte(params)))
@@ -207,8 +224,9 @@ func (c *collection) drawPunk(base block, attributes map[int]block) {
 	}
 	img = allBlocks.getPunkBlock(base.img[base.id]).(*image.RGBA)
 
-	draw.Draw(c.i, image.Rect(x, y, x+24, y+24), img, img.Bounds().Min, draw.Src)
+	draw.Draw(c.i, image.Rect(x, y, x+24, y+24), img, img.Bounds().Min, draw.Over)
 	//base.save()
+	fmt.Println("punkid:", c.nextID, attributes)
 	for i := 0; i < 13; i++ {
 		if v, ok := attributes[i]; ok {
 			img = allBlocks.getPunkBlock(v.img[base.id]).(*image.RGBA)
@@ -216,8 +234,11 @@ func (c *collection) drawPunk(base block, attributes map[int]block) {
 			//v.save()
 		}
 	}
-	//c.save()
-	//os.Exit(0)
+	if c.nextID == 20 {
+		//c.save()
+		//os.Exit(0)
+	}
+
 	c.nextID++
 }
 
@@ -329,7 +350,7 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 
 		attRolls := 0
 		catRolls++
-		if catRolls > len(set)*5 {
+		if catRolls > len(set)*6 {
 			return chosenAtt // sometimes the odds of finding a match may be impossible
 		}
 		//fmt.Println("cat roll:", catRolls, ", i:", i)
@@ -370,12 +391,18 @@ func pickPunk(set map[int][]block, base block, r1 *rand.Rand, desiredCount int) 
 
 }
 
-var counts = [8]int{8, 333, 3560, 4501, 1420, 166, 11, 1}
+//var counts = [8]int{8, 333, 3560, 4501, 1420, 166, 11, 1}
+
+var counts = [11]int{0, 0, 1000, 1000, 1860, 2000, 2534, 1020, 566, 11, 9}
 
 func pickCount(r1 *rand.Rand) int {
 	i := r1.Intn(8)
 	for {
 		n2 := r1.Intn(10000)
+		if counts[i] == 0 {
+			i++
+			continue
+		}
 		if counts[i] >= n2 {
 			return i
 		}
