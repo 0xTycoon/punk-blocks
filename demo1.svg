@@ -1,1 +1,13 @@
-<svg class="punkblock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><image x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid meet" style="image-rendering:crisp-edges;image-rendering:pixelated" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAAElBMVEUAAAAAAADI+/ub4ODx//91vb1AU8EhAAAAAXRSTlMAQObYZgAAAFZJREFUeNqsj7ERgDAMA8kGsZggf7BARmAD9l+GBhM17nDlP+tkaftlIqLn3oCRoAPIky4HCmg6xf2C5pjsfTmbDKYb1OB/IlQmWKmxPvo0Dk8AAAD//+OnC3weng4LAAAAAElFTkSuQmCC" /><image x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid meet" style="image-rendering:crisp-edges;image-rendering:pixelated" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAgMAAACdGdVrAAAACVBMVEUAAAAAAABpLwjYoqkwAAAAAXRSTlMAQObYZgAAAChJREFUeNpioB9ghFIBjA4gKjQUTIUtReIxhIYyIFGiIXDNgAAAAP//s6QFY2a0MnMAAAAASUVORK5CYII=" /><image x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid meet" style="image-rendering:crisp-edges;image-rendering:pixelated" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAgMAAACdGdVrAAAADFBMVEUAAADw8PAyjf39MjLUeSMSAAAAAXRSTlMAQObYZgAAACFJREFUeNpioBJgDQ11YGBgYMyqB1EMUAoiSA0ACAAA//9d0wQtsPFt1AAAAABJRU5ErkJggg=="/></svg>
+<svg class="punkblock" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" >
+    <style>
+        .pix {image-rendering:pixelated;-ms-interpolation-mode: nearest-neighbor;
+        image-rendering: -moz-crisp-edges;}
+    </style>
+    <foreignObject x="0" y="0" width="24" height="24">
+    <img xmlns="http://www.w3.org/1999/xhtml"  width="24" height="24"  class="pix" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAAElBMVEUAAAAAAADI+/ub4ODx//91vb1AU8EhAAAAAXRSTlMAQObYZgAAAFZJREFUeNqsj7ERgDAMA8kGsZggf7BARmAD9l+GBhM17nDlP+tkaftlIqLn3oCRoAPIky4HCmg6xf2C5pjsfTmbDKYb1OB/IlQmWKmxPvo0Dk8AAAD//+OnC3weng4LAAAAAElFTkSuQmCC" />
+    </foreignObject>
+    <foreignObject x="0" y="0" width="24" height="24">
+        <img xmlns="http://www.w3.org/1999/xhtml"  width="24" height="24" class="pix" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAgMAAACdGdVrAAAACVBMVEUAAAAAAABpLwjYoqkwAAAAAXRSTlMAQObYZgAAAChJREFUeNpioB9ghFIBjA4gKjQUTIUtReIxhIYyIFGiIXDNgAAAAP//s6QFY2a0MnMAAAAASUVORK5CYII=" />
+    </foreignObject>
+</svg>
+
