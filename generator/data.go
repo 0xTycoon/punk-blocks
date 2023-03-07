@@ -34,13 +34,19 @@ var layers = `0,Base,
 11,Headgear
 12,Neck`
 
+// Cells R to AB are tile indexes for each base
+// Cells N to Q female counts
+// Cells J to M male counts
+// and so on..
+// f1 = darkest fem, m4 = lightest
+// id(a), Name(b), Layer(c), Total(d), total M(e), total F(f), Alien tot(g), Ape tot(h), Zombie tot(i), M1 tot(j), M2 tot (k), M3 tot(l), M4 tot(m), F1(n), f2(o), f3 tot(p), f4 tot (q), Alien title, Zombie tile, Ape tile, m1 tile, m2 tile, m3 tile, m4 tile, f1 tile, f2 tile, f3 tile, f4 tile
 var params2 = `0,Alien,0,9,9,,,,,,,,,,,,,10,10,10,10,10,10,10,,,,
 1,Ape,0,24,24,,,,,,,,,,,,,9,9,9,9,9,9,9,,,,
 2,Zombie,0,88,88,,,,,,,,,,,,,8,8,8,8,8,8,8,,,,
 2,Male4,0,598,598,,,,,,,,,,,,,0,0,0,0,0,0,0,,,,
 3,Male1,0,1723,1723,,,,,,,,,,,,,3,3,3,3,3,3,3,,,,
 4,Male2,0,1857,1857,,,,,,,,,,,,,2,2,2,2,2,2,2,,,,
-6,Male3,0,1861,1861,,,,,,,,,,,,,1,1,1,1,1,1,1,,,,
+6,Male3,0,1861,1861,,,,,,,,,,,,,164,1,1,1,1,1,1,,,,
 7,Female4,0,420,,420,,,,,,,,,,,,,,,,,,,4,4,4,4
 8,Female1,0,1101,,1101,,,,,,,,,,,,,,,,,,,7,7,7,7
 9,Female3,0,1145,,1145,,,,,,,,,,,,,,,,,,,5,5,5,5
@@ -132,7 +138,7 @@ var params2 = `0,Alien,0,9,9,,,,,,,,,,,,,10,10,10,10,10,10,10,,,,
 95,Shadow Beard,4,526,516,,,,10,166,146,164,40,,,,,22,22,22,22,22,22,22,,,,
 96,Cigarette,9,961,557,392,,1,11,151,191,157,58,113,120,120,39,18,18,18,18,18,18,18,114,114,114,114
 97,Earring,10,2459,1498,933,3,3,22,412,475,475,136,270,315,257,91,60,60,60,60,60,60,60,124,124,124,124
-98,Stogie,9,5000,5000,1000,5,5,44,700,500,500,400,600,600,440,300,133,133,133,133,133,133,133,134,134,134,134
+98,Stogie,9,1000,1000,1000,5,5,44,1000,1000,1000,1000,1000,1000,1000,1000,133,133,133,133,133,133,133,134,134,134,134
 99,Earpiece,6,5000,5000,1000,3,3,44,700,500,500,200,400,300,440,300,135,135,135,135,135,135,135,136,136,136,136
 100,Cig Cap,3,5000,5000,1000,3,3,44,700,500,500,200,400,300,440,300,137,137,137,137,137,137,137,138,138,138,138
 101,Earphones,6,5000,5000,1000,3,3,44,700,500,500,200,400,300,440,300,139,139,139,130,139,139,139,140,140,140,140
@@ -150,14 +156,14 @@ var params2 = `0,Alien,0,9,9,,,,,,,,,,,,,10,10,10,10,10,10,10,,,,
 
 `
 
-var params = `0,Male4,m,0,598
-1,Male3,m,0,1861
-2,Male2,m,0,1857
-3,Male1,m,0,1723
-4,Female4,f,0,420
-5,Female3,f,0,1145
-6,Female2,f,0,1174
-7,Female1,f,0,1101
+var params = `0,Male 1,m,0,598
+1,Male 2,m,0,1861
+2,Male 3,m,0,1857
+3,Male 4,m,0,1723
+4,Female 1,f,0,420
+5,Female 2,f,0,1145
+6,Female 3,f,0,1174
+7,Female 4,f,0,1101
 8,Zombie,m,0,88
 9,Ape,m,0,24
 10,Alien,m,0,9
@@ -165,58 +171,58 @@ var params = `0,Male4,m,0,598
 12,Luxurious Beard,m,4,286
 13,Clown Hair Green,m,3,148
 14,Mohawk Dark,m,3,429
-15,Cowboy Hat,m,11,142
+15,Cowboy Hat,m,9,142
 16,Mustache,m,4,288
-17,Clown Nose,m,7,212
-18,Cigarette,m,9,961
+17,Clown Nose,m,11,212
+18,Cigarette,m,10,961
 19,Nerd Glasses,m,6,572
 20,Regular Shades,m,6,527
-21,Knitted Cap,m,11,419
+21,Knitted Cap,m,9,419
 22,Shadow Beard,m,4,526
-23,Frown,m,8,261
-24,Cap Forward,m,11,254
+23,Frown,m,7,261
+24,Cap Forward,m,9,254
 25,Goat,m,4,295
 26,Mole,m,2,644
 27,Purple Hair,m,3,165
 28,Small Shades,m,6,378
 29,Shaved Head,m,3,300
 30,Classic Shades,m,6,502
-31,Vape,m,9,272
+31,Vape,m,10,272
 32,Silver Chain,m,12,156
-33,Smile,m,8,238
+33,Smile,m,7,238
 34,Big Shades,m,6,535
 35,Mohawk Thin,m,3,441
-36,Beanie,m,11,44
-37,Cap,m,11,351
+36,Beanie,m,9,44
+37,Cap,m,9,351
 38,Clown Eyes Green,m,5,382
 39,Normal Beard Black,m,4,289
-40,Medical Mask,m,9,175
+40,Medical Mask,m,10,175
 41,Normal Beard,m,4,292
 42,VR,m,6,332
 43,Eye Patch,m,5,461
 44,Wild Hair,m,3,447
-45,Top Hat,m,11,115
-46,Bandana,m,11,481
+45,Top Hat,m,9,115
+46,Bandana,m,9,481
 47,Handlebars,m,4,263
 48,Frumpy Hair,m,3,442
 49,Crazy Hair,m,3,414
-50,Police Cap,m,11,203
-51,Buck Teeth,m,8,78
-52,Do-rag,m,11,300
+50,Police Cap,m,9,203
+51,Buck Teeth,m,7,78
+52,Do-rag,m,9,300
 53,Front Beard,m,4,273
 54,Spots,m,2,124
 55,Big Beard,m,4,146
 56,Vampire Hair,m,3,147
 57,Peak Spike,m,3,303
 58,Chinstrap,m,4,282
-59,Fedora,m,11,186
-60,Earring,m,10,2459
+59,Fedora,m,9,186
+60,Earring,m,8,2459
 61,Horned Rim Glasses,m,6,535
-62,Headband,m,11,406
-63,Pipe,m,9,317
+62,Headband,m,9,406
+63,Pipe,m,10,317
 64,Messy Hair,m,3,460
 65,Front Beard Dark,m,4,260
-66,Hoodie,m,11,259
+66,Hoodie,m,9,259
 67,Gold Chain,m,12,169
 68,Muttonchops,m,4,303
 69,Stringy Hair,m,3,463
@@ -224,9 +230,9 @@ var params = `0,Male4,m,0,598
 71,3D Glasses,m,6,286
 72,Clown Eyes Blue,m,5,384
 73,Mohawk,m,3,441
-74,Pilot Helmet,f,11,54
-75,Tassle Hat,f,11,178
-76,Hot Lipstick,f,8,696
+74,Pilot Helmet,f,9,54
+75,Tassle Hat,f,9,178
+76,Hot Lipstick,f,7,696
 77,Blue Eye Shadow,f,5,266
 78,Straight Hair Dark,f,3,148
 79,Choker,f,12,48
@@ -239,12 +245,12 @@ var params = `0,Male4,m,0,598
 86,Spots,f,2,124
 87,Frumpy Hair,f,3,442
 88,Nerd Glasses,f,6,572
-89,Tiara,f,11,55
+89,Tiara,f,9,55
 90,Orange Side,f,3,68
 91,Red Mohawk,f,3,147
 92,Messy Hair,f,3,460
 93,Clown Eyes Blue,f,5,384
-94,Pipe,f,9,317
+94,Pipe,f,10,317
 95,Wild Hair,f,3,447
 96,Purple Eye Shadow,f,5,262
 97,Stringy Hair,f,3,463
@@ -254,34 +260,87 @@ var params = `0,Male4,m,0,598
 101,Classic Shades,f,6,502
 102,Eye Mask,f,6,293
 103,Clown Hair Green,f,3,148
-104,Cap,f,11,351
-105,Medical Mask,f,9,175
-106,Bandana,f,11,481
-107,Purple Lipstick,f,8,655
-108,Clown Nose,f,7,212
-109,Headband,f,11,406
+104,Cap,f,9,351
+105,Medical Mask,f,10,175
+106,Bandana,f,9,481
+107,Purple Lipstick,f,7,655
+108,Clown Nose,f,11,212
+109,Headband,f,9,406
 110,Pigtails,f,3,94
 111,Straight Hair Blonde,f,3,144
-112,Knitted Cap,f,11,419
+112,Knitted Cap,f,9,419
 113,Clown Eyes Green,f,5,382
-114,Cigarette,f,9,961
+114,Cigarette,f,10,961
 115,Welding Goggles,f,6,86
 116,Mohawk Thin,f,3,441
 117,Gold Chain,f,12,169
 118,VR,f,6,332
-119,Vape,f,9,272
+119,Vape,f,10,272
 120,Pink With Hat,f,3,95
 121,Blonde Bob,f,3,147
 122,Mohawk,f,3,441
 123,Big Shades,f,6,535
-124,Earring,f,10,2459
+124,Earring,f,8,2459
 125,Green Eye Shadow,f,5,271
 126,Straight Hair,f,3,151
 127,Rosy Cheeks,f,1,128
 128,Half Shaved,f,3,147
 129,Mohawk Dark,f,3,429
-130,Black Lipstick,f,8,617
+130,Black Lipstick,f,7,617
 131,Horned Rim Glasses,f,6,535
 132,Silver Chain,f,12,156
-
 `
+
+/*
+
+
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+131,Horned Rim Glasses,f,6,535
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+131,Horned Rim Glasses,f,6,535
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+131,Horned Rim Glasses,f,6,535
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+131,Horned Rim Glasses,f,6,535
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+132,Silver Chain,f,12,156
+
+*/
