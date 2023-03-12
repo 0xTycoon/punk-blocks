@@ -17,9 +17,9 @@ their own hybrid punks, or display the original punks.
 
 ## Deployment
 
-Ethereum Mainnet, contract's address: `0xdBaE0e98A7799a5998ADa496b944F93F83191E04`
+Ethereum Mainnet, contract's address: `0x6A6b22d85a603E1cE9A4278e9F8896894390D0b8`
 
-[Verified source](https://etherscan.io/address/0xdBaE0e98A7799a5998ADa496b944F93F83191E04#code)
+[Verified source](https://etherscan.io/address/0x6A6b22d85a603E1cE9A4278e9F8896894390D0b8#code)
 
 ### Simple UI (Demo)
 
