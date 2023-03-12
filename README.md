@@ -17,9 +17,10 @@ their own hybrid punks, or display the original punks.
 
 ## Deployment
 
-Ethereum Mainnet, contract's address: `0x58E90596C2065BEfD3060767736C829C18F3474c`
+Ethereum Mainnet, contract's address: `0xdBaE0e98A7799a5998ADa496b944F93F83191E04`
 
-[Verified source](https://etherscan.io/address/0x58E90596C2065BEfD3060767736C829C18F3474c#code)
+[Verified source](https://etherscan.io/address/0xdBaE0e98A7799a5998ADa496b944F93F83191E04#code)
+
 
 
 ## Prior art, scope and purpose
@@ -64,8 +65,10 @@ for providing a
 /**
 * @dev svgFromPunkID returns the svg data as a string given a punk id
 * @param _tokenID uint256 IDs a punk id, 0-9999
+* @param _size the width and height of generated svg, eg. 24
+* @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromPunkID(uint256 _tokenID) external view returns (string memory);
+function svgFromPunkID(uint256 _tokenID, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromNames returns the svg data as a string
@@ -75,8 +78,10 @@ function svgFromPunkID(uint256 _tokenID) external view returns (string memory);
 *   Where "Male 1" is a layer 0 attribute, that decides what version of
 *   image to use for the higher
 *   layers (dataMale or dataFemale)
+* @param _size the width and height of generated svg, eg. 24
+* @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromNames(string[] calldata _attributeNames) external view returns (string memory);
+function svgFromNames(string[] calldata _attributeNames, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromKeys returns the svg data as a string
@@ -87,8 +92,10 @@ function svgFromNames(string[] calldata _attributeNames) external view returns (
 *    (dataMale or dataFemale)
 *    e.g. ["0x9039da071f773e85254cbd0f99efa70230c4c11d63fce84323db9eca8e8ef283",
 *    "0xd5de5c20969a9e22f93842ca4d65bac0c0387225cee45a944a14f03f9221fd4a"]
+* @param _size the width and height of generated svg, eg. 24
+* @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (string memory);
+function svgFromKeys(bytes32[] calldata _attributeKeys, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromIDs returns the svg data as a string
@@ -97,24 +104,33 @@ function svgFromKeys(bytes32[] calldata _attributeKeys) external view returns (s
 *   This element decides what version of image to use for the higher layers
 *   (dataMale or dataFemale)
 * @param _ids uint256 ids of an attribute, by it's index of creation
+* @param _size the width and height of generated svg, eg. 24
+* @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromIDs(uint256[] calldata _ids) external view returns (string memory);
+function svgFromIDs(uint256[] calldata _ids, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev registerBlock allows anybody to add a new block to the contract.
 *   Either _dataMale or _dataFemale, or both, must contain a byte stream of a png file.
 *   It's best if the png is using an 'index palette' and the lowest bit depth possible,
 *   while keeping the highest compression setting.
-* @param _dataMale png data for the male version, 24x24
-* @param _dataFemale png data for the female version, 24x24
+* @param _dataL png data for the male version, 24x24
+* @param _dataS png data for the female version, 24x24
 * @param _layer 0 to 12, corresponding to the Layer enum type.
 * @param _name the name of the trait, Camel Case. e.g. "Luxurious Beard"
 */
 function registerBlock(
-    bytes calldata _dataMale,
-    bytes calldata _dataFemale,
+    bytes calldata _dataL,
+    bytes calldata _dataS,
     uint8 _layer,
     string memory _name) external;
+
+function blockS(bytes32) view external returns(bytes32);
+
+function blockS(bytes32) view external returns(bytes32);
+
+function blocksInfo(bytes32) view external returns(uint256);
+
 ```
 
 ### Layers
@@ -130,18 +146,18 @@ the comments below are examples from the default attribute set.
 ```solidity
 enum Layer {
     Base,      // 0 Base is the face. Determines if m or f version will be used to render the remaining layers
-    Cheeks,    // 1 (Rosy Cheeks)
-    Blemish,   // 2 (Mole, Spots)
-    Hair,      // 3 (Purple Hair, Shaved Head, Pigtails, ...)
-    Beard,     // 4 (Big Beard, Front Beard, Goat, ...)
-    Eyes,      // 5 (Clown Eyes Green, Green Eye Shadow, ...)
-    Eyewear,   // 6 (VR, 3D Glass, Eye Mask, Regular Shades, Welding Glasses, ...)
-    Nose,      // 7 (Clown Nose)
-    Mouth,     // 8 (Hot Lipstick, Smile, Buck Teeth, ...)
-    MouthProp, // 9 (Medical Mask, Cigarette, ...)
-    Earring,   // 10 (Earring)
-    Headgear,  // 11 (Beanie, Fedora, Hoodie, Police Cap, Tiara, Headband, ...)
-    Neck       // 12 (Choker, Silver Chain, Gold Chain)
+    Mouth,     // 1 (Hot Lipstick, Smile, Buck Teeth, ...)
+    Cheeks,    // 2 (Rosy Cheeks)
+    Blemish,   // 3 (Mole, Spots)
+    Eyes,      // 4 (Clown Eyes Green, Green Eye Shadow, ...)
+    Neck,      // 5 (Choker, Silver Chain, Gold Chain)
+    Beard,     // 6 (Big Beard, Front Beard, Goat, ...)
+    Ears,   // 7 (Earring)
+    HeadTop1,  //8 9&3 (Purple Hair, Shaved Head, Beanie, Fedora,Hoodie)
+    HeadTop2,  //9  eg. additional hat over hair (not used by LL punks)
+    Eyewear,   // 10 (VR, 3D Glass, Eye Mask, Regular Shades, Welding Glasses, ...)
+    MouthProp, // 11 (Medical Mask, Cigarette, ...)
+    Nose      // 12 (Clown Nose)
 }
 ```
 ### Adding new blocks.
@@ -192,6 +208,6 @@ copyright owner.
 
 # Demo
 
-Here's a never-seen-before Alien with a Luxurious Beard and 3D Glasses.
+Here's a never-seen-before punk rendered using Punk Blocks.
 
 ![PunkBlocks](demo1.svg)
