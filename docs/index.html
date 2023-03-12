@@ -108,18 +108,18 @@
             <select id="layer">
                 <option value="404">[Select]</option>
                 <option value="0">0 - Base Face</option>
-                <option value="1">1 - Cheeks</option>
-                <option value="2">2 - Blemish</option>
-                <option value="3">3 - Hair</option>
-                <option value="4">4 - Beard</option>
-                <option value="5">5 - Eyes</option>
-                <option value="6">6 - Eyewear</option>
-                <option value="7">7 - Nose</option>
-                <option value="8">8 - Mouth</option>
-                <option value="9">9 - MouthProp</option>
-                <option value="10">10 - Earring</option>
-                <option value="11">11 - Headgear</option>
-                <option value="12">12 - Neck</option>
+                <option value="1">1 - Mouth</option>
+                <option value="2">2 - Cheeks</option>
+                <option value="3">3 - Blemish</option>
+                <option value="4">4 - Eyes</option>
+                <option value="5">5 - Neck</option>
+                <option value="6">6 - Beard</option>
+                <option value="7">7 - Ears</option>
+                <option value="8">8 - HeadTop1</option>
+                <option value="9">9 - HeadTop2</option>
+                <option value="10">10 - Eyewear</option>
+                <option value="11">11 - MouthProp</option>
+                <option value="12">12 - Nose</option>
             </select>
         </label>
     </div>
@@ -139,13 +139,33 @@
     let provider, signer, pb;
 </script>
 <script type="module">
-    import {ethers} from "./js/ethers-5.2.esm.min.js";
+    import {ethers} from "./js/ethers-6.1.min.js";
 
     async function run() {
 
-        provider = new ethers.providers.Web3Provider(window.ethereum)
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
+        if (window.ethereum == null) {
+
+            // If MetaMask is not installed, we use the default provider,
+            // which is backed by a variety of third-party services (such
+            // as INFURA). They do not have private keys installed so are
+            // only have read-only access
+            console.log("MetaMask not installed; using read-only defaults")
+            provider = ethers.getDefaultProvider();
+
+        } else {
+
+            // Connect to the MetaMask EIP-1193 object. This is a standard
+            // protocol that allows Ethers access to make all read-only
+            // requests through MetaMask.
+            provider = new ethers.BrowserProvider(window.ethereum)
+
+            // It also provides an opportunity to request access to write
+            // operations, which will be performed by the private key
+            // that MetaMask manages for the user.
+            signer = await provider.getSigner();
+        }
+
+
 
         console.log(signer);
         console.log("hi");
@@ -155,455 +175,14 @@
 
         const punkBlocksAddress = "0xdBaE0e98A7799a5998ADa496b944F93F83191E04";
 
-        const abi = [
-            {
-                "inputs": [],
-                "stateMutability": "nonpayable",
-                "type": "constructor"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": false,
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "name": "NewBlock",
-                "type": "event"
-            },
-            {
-                "inputs": [],
-                "name": "abort",
-                "outputs": [],
-                "stateMutability": "payable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "blockL",
-                "outputs": [
-                    {
-                        "internalType": "bytes",
-                        "name": "",
-                        "type": "bytes"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "blockS",
-                "outputs": [
-                    {
-                        "internalType": "bytes",
-                        "name": "",
-                        "type": "bytes"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "blockToLayer",
-                "outputs": [
-                    {
-                        "internalType": "enum PunkBlocks.Layer",
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "blocksInfo",
-                "outputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_fromID",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "_count",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "getBlocks",
-                "outputs": [
-                    {
-                        "components": [
-                            {
-                                "internalType": "enum PunkBlocks.Layer",
-                                "name": "layer",
-                                "type": "uint8"
-                            },
-                            {
-                                "internalType": "bytes",
-                                "name": "blockL",
-                                "type": "bytes"
-                            },
-                            {
-                                "internalType": "bytes",
-                                "name": "blockS",
-                                "type": "bytes"
-                            }
-                        ],
-                        "internalType": "struct PunkBlocks.Block[]",
-                        "name": "",
-                        "type": "tuple[]"
-                    },
-                    {
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    }
-                ],
-                "name": "index",
-                "outputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "_id",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "info",
-                "outputs": [
-                    {
-                        "internalType": "enum PunkBlocks.Layer",
-                        "name": "",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "",
-                        "type": "uint16"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "",
-                        "type": "uint16"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "nextConfigId",
-                "outputs": [
-                    {
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "nextId",
-                "outputs": [
-                    {
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint32",
-                        "name": "",
-                        "type": "uint32"
-                    },
-                    {
-                        "internalType": "enum PunkBlocks.Layer",
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
-                "name": "orderConfig",
-                "outputs": [
-                    {
-                        "internalType": "uint16",
-                        "name": "",
-                        "type": "uint16"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes",
-                        "name": "_dataL",
-                        "type": "bytes"
-                    },
-                    {
-                        "internalType": "bytes",
-                        "name": "_dataS",
-                        "type": "bytes"
-                    },
-                    {
-                        "internalType": "uint8",
-                        "name": "_layer",
-                        "type": "uint8"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "_name",
-                        "type": "string"
-                    }
-                ],
-                "name": "registerBlock",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "enum PunkBlocks.Layer[]",
-                        "name": "_order",
-                        "type": "uint8[]"
-                    }
-                ],
-                "name": "registerOrderConfig",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "name": "seal",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint32[]",
-                        "name": "_ids",
-                        "type": "uint32[]"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "_size",
-                        "type": "uint16"
-                    },
-                    {
-                        "internalType": "uint32",
-                        "name": "_orderID",
-                        "type": "uint32"
-                    }
-                ],
-                "name": "svgFromIDs",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32[]",
-                        "name": "_attributeKeys",
-                        "type": "bytes32[]"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "_size",
-                        "type": "uint16"
-                    },
-                    {
-                        "internalType": "uint32",
-                        "name": "_orderID",
-                        "type": "uint32"
-                    }
-                ],
-                "name": "svgFromKeys",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "string[]",
-                        "name": "_attributeNames",
-                        "type": "string[]"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "_size",
-                        "type": "uint16"
-                    },
-                    {
-                        "internalType": "uint32",
-                        "name": "_orderID",
-                        "type": "uint32"
-                    }
-                ],
-                "name": "svgFromNames",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "_tokenID",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint16",
-                        "name": "_size",
-                        "type": "uint16"
-                    },
-                    {
-                        "internalType": "uint32",
-                        "name": "_orderID",
-                        "type": "uint32"
-                    }
-                ],
-                "name": "svgFromPunkID",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "uint256",
-                        "name": "value",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "toString",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "pure",
-                "type": "function"
-            }
-        ];
+        const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"","type":"address"},{"indexed":false,"internalType":"uint32","name":"","type":"uint32"},{"indexed":false,"internalType":"string","name":"","type":"string"}],"name":"NewBlock","type":"event"},{"inputs":[],"name":"abort","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blockL","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blockS","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"blockToLayer","outputs":[{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blocksInfo","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_fromID","type":"uint256"},{"internalType":"uint256","name":"_count","type":"uint256"}],"name":"getBlocks","outputs":[{"components":[{"internalType":"enum PunkBlocks.Layer","name":"layer","type":"uint8"},{"internalType":"bytes","name":"blockL","type":"bytes"},{"internalType":"bytes","name":"blockS","type":"bytes"}],"internalType":"struct PunkBlocks.Block[]","name":"","type":"tuple[]"},{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"}],"name":"index","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_id","type":"bytes32"}],"name":"info","outputs":[{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"},{"internalType":"uint16","name":"","type":"uint16"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextConfigId","outputs":[{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextId","outputs":[{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"},{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"}],"name":"orderConfig","outputs":[{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes","name":"_dataL","type":"bytes"},{"internalType":"bytes","name":"_dataS","type":"bytes"},{"internalType":"uint8","name":"_layer","type":"uint8"},{"internalType":"string","name":"_name","type":"string"}],"name":"registerBlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"enum PunkBlocks.Layer[]","name":"_order","type":"uint8[]"}],"name":"registerOrderConfig","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"seal","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint32[]","name":"_ids","type":"uint32[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromIDs","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"_attributeKeys","type":"bytes32[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromKeys","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string[]","name":"_attributeNames","type":"string[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromNames","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenID","type":"uint256"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromPunkID","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"value","type":"uint256"}],"name":"toString","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"}];
 
 // The Contract object
 
         pb = new ethers.Contract(punkBlocksAddress, abi, provider);
 
-        let punk1 = await pb.svgFromIDs([5, 77, 45], 48, 0);
-        console.log(punk1);
+//        let punk1 = await pb.svgFromIDs([5, 77, 45], 48, 0);
+  //      console.log(punk1);
 
         console.log("=====");
 
@@ -715,7 +294,7 @@
         e.preventDefault();
         const text = document.getElementById('svgFromNames');
         const attributes = text.value.split(',').map(s=>s.trim());
-        let svg = await pb.svgFromNames(attributes, 48, 0);
+        let svg = await pb.svgFromNames(attributes, 480, 0);
         document.getElementById('svgFromNames-result').innerHTML = svg;
     }
 
@@ -723,21 +302,21 @@
         e.preventDefault();
         const text = document.getElementById('svgFromKeys');
         const attributes = text.value.split(',').map(s=>s.trim());
-        document.getElementById('svgFromKeys-result').innerHTML= await pb.svgFromKeys(attributes, 48, 0);
+        document.getElementById('svgFromKeys-result').innerHTML= await pb.svgFromKeys(attributes, 480, 0);
     }
 
     async function svgFromIDs(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromIDs');
         const attributes = text.value.split(',').map(s=>s.trim());
-        document.getElementById('svgFromIDs-result').innerHTML= await pb.svgFromIDs(attributes, 48, 0);
+        document.getElementById('svgFromIDs-result').innerHTML= await pb.svgFromIDs(attributes, 480, 0);
     }
 
     async function svgFromPunkID(e) {
         e.preventDefault();
         const text = document.getElementById('svgFromPunkID').value;
         //const attributes = text.value.split(',').map(s=>s.trim());
-        document.getElementById('svgFromPunkID-result').innerHTML= await pb.svgFromPunkID(text.trim(), 48, 0);
+        document.getElementById('svgFromPunkID-result').innerHTML= await pb.svgFromPunkID(text.trim(), 480, 0);
     }
 
     document.getElementById("register").addEventListener("click", register);
