@@ -21,7 +21,10 @@ Ethereum Mainnet, contract's address: `0xdBaE0e98A7799a5998ADa496b944F93F83191E0
 
 [Verified source](https://etherscan.io/address/0xdBaE0e98A7799a5998ADa496b944F93F83191E04#code)
 
+### Simple UI (Demo)
 
+Here is a [simple web UI](https://0xtycoon.github.io/punk-blocks/) for generating punks from blocks, or
+viewing and registering new blocks with the contract.
 
 ## Prior art, scope and purpose
 
@@ -152,12 +155,12 @@ enum Layer {
     Eyes,      // 4 (Clown Eyes Green, Green Eye Shadow, ...)
     Neck,      // 5 (Choker, Silver Chain, Gold Chain)
     Beard,     // 6 (Big Beard, Front Beard, Goat, ...)
-    Ears,   // 7 (Earring)
-    HeadTop1,  //8 9&3 (Purple Hair, Shaved Head, Beanie, Fedora,Hoodie)
-    HeadTop2,  //9  eg. additional hat over hair (not used by LL punks)
+    Ears,      // 7 (Earring)
+    HeadTop1,  // 8 9&3 (Purple Hair, Shaved Head, Beanie, Fedora,Hoodie)
+    HeadTop2,  // 9  eg. additional hat over hair (not used by LL punks)
     Eyewear,   // 10 (VR, 3D Glass, Eye Mask, Regular Shades, Welding Glasses, ...)
     MouthProp, // 11 (Medical Mask, Cigarette, ...)
-    Nose      // 12 (Clown Nose)
+    Nose       // 12 (Clown Nose)
 }
 ```
 ### Adding new blocks.
@@ -188,10 +191,6 @@ It reads some blocks from a source png file and breaks them down to 24x24
 images. Each image is then saved as an optimized png, then the Solidity code 
 is generated with the help of a sprite sheet data in a CSV format.
 
-### Simple UI
-
-Here is a [simple web UI](https://0xtycoon.github.io/punk-blocks/) for generating punks from blocks, or 
-viewing and registering new blocks with the contract.
 
 
 ### License

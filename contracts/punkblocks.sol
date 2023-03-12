@@ -52,7 +52,7 @@ https://github.com/0xTycoon/punk-blocks
 
 */
 
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 contract PunkBlocks {
     using DynamicBufferLib for DynamicBufferLib.DynamicBuffer;
@@ -78,7 +78,6 @@ contract PunkBlocks {
         bytes blockL;// male version of this attribute
         bytes blockS;// female version of this attribute
     }
-
     mapping(bytes32 => bytes) public blockS;      // small attributes as png
     mapping(bytes32 => bytes) public blockL;      // large attributes as png
     mapping(bytes32 => uint256) public blocksInfo;// byte 0: layer, byte 1-2: blockL.length, byte 3-5: blockS.length
