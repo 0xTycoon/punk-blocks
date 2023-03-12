@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
-// Version: v0.1.1
+// Version: v0.1.2
 // Note: The MIT license is for the source code only. Images registered through
 // this contract retain all of their owner's rights. This contract
 // is a non-profit "library" project and intended to archive & preserve punk
@@ -813,8 +813,8 @@ contract PunkBlocks {
         nextId++;
 
         hash = hex"c0ac7bb45040825a6d9a997dc99a6ec94027d27133145018c0561b880ecdb389";
-        blocksInfo[hash] = 2030043139;
-        blockS[hash] = hex"89504e470d0a1a0a0000000d4948445200000018000000180103000000dab9afbb00000006504c5445000000000000a567b9cf0000000174524e530040e6d866000000214944415478da62c009fe313030ce656060e480605c8011861bb04a03020000ffff7e1c023207c1f3860000000049454e44ae426082";
+        blocksInfo[hash] = 30984;
+        blockL[hash] = hex"89504e470d0a1a0a0000000d4948445200000018000000180103000000dab9afbb00000006504c5445000000000000a567b9cf0000000174524e530040e6d866000000214944415478da62c009fe313030ce656060e480605c8011861bb04a03020000ffff7e1c023207c1f3860000000049454e44ae426082";
         index[nextId] = bytes32(hash);
         nextId++;
 

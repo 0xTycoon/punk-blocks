@@ -15,7 +15,7 @@ describe("PunkBlocks", function () {
         it("Get SVG by Punk", async function () {
 
 
-            svg = await blocks.svgFromPunkID(8348, 24, 0); // 8348
+            svg = await blocks.svgFromPunkID(9987, 24, 0); // 8348
             console.log("original punk: "+svg);
 
         });
@@ -31,7 +31,7 @@ describe("PunkBlocks", function () {
                 return ethers.utils.keccak256(ethers.utils.hexlify(ethers.utils.toUtf8Bytes((s))))
             }
 
-            //console.log("White Hat:", getKey("White Hat"));
+            console.log("Vampire Hair", getKey("Vampire Hair"));
 
             attributes = [
                 getKey("Male 2"),
