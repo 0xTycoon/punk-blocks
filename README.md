@@ -1,7 +1,6 @@
 
 ![PunkBlocks](title.png)
 
-
 # PunkBlocks
 
 This project deploys a contract to the Ethereum mainnet that can store 24x24 
@@ -71,7 +70,7 @@ for providing a
 * @param _size the width and height of generated svg, eg. 24
 * @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromPunkID(uint256 _tokenID, uint16 _size, uint32 _orderID) external view returns (string memory);
+function svgFromPunkID(uint256 _tokenID, uint16 _x, uint16 _y, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromNames returns the svg data as a string
@@ -84,7 +83,7 @@ function svgFromPunkID(uint256 _tokenID, uint16 _size, uint32 _orderID) external
 * @param _size the width and height of generated svg, eg. 24
 * @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromNames(string[] calldata _attributeNames, uint16 _size, uint32 _orderID) external view returns (string memory);
+function svgFromNames(string[] calldata _attributeNames, uint16 _x, uint16 _y, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromKeys returns the svg data as a string
@@ -98,7 +97,7 @@ function svgFromNames(string[] calldata _attributeNames, uint16 _size, uint32 _o
 * @param _size the width and height of generated svg, eg. 24
 * @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromKeys(bytes32[] calldata _attributeKeys, uint16 _size, uint32 _orderID) external view returns (string memory);
+function svgFromKeys(bytes32[] calldata _attributeKeys, uint16 _x, uint16 _y, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev svgFromIDs returns the svg data as a string
@@ -110,7 +109,7 @@ function svgFromKeys(bytes32[] calldata _attributeKeys, uint16 _size, uint32 _or
 * @param _size the width and height of generated svg, eg. 24
 * @param _orderID which order config to use when rendering, 0 is the default
 */
-function svgFromIDs(uint256[] calldata _ids, uint16 _size, uint32 _orderID) external view returns (string memory);
+function svgFromIDs(uint256[] calldata _ids, uint16 _x, uint16 _y, uint16 _size, uint32 _orderID) external view returns (string memory);
 
 /**
 * @dev registerBlock allows anybody to add a new block to the contract.

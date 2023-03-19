@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
-// Version: v0.1.2
+// Version: v0.1.3
 // Note: The MIT license is for the source code only. Images registered through
 // this contract retain all of their owner's rights. This contract
 // is a non-profit "library" project and intended to archive & preserve punk
@@ -151,7 +151,7 @@ contract PunkBlocks {
     /**
     * get info about a block
     */
-    function info(bytes32 _id) view external returns(Layer, uint16, uint16) {
+    function info(bytes32 _id) view public returns(Layer, uint16, uint16) {
         uint256 info = blocksInfo[_id];
         if (info == 0) {
             return (Layer.Base, 0, 0);
@@ -284,6 +284,8 @@ contract PunkBlocks {
     */
     function svgFromNames(
         string[] memory _attributeNames,
+        uint16 _x,
+        uint16 _y,
         uint16 _size,
         uint32 _orderID) external view returns (string memory){
         bool isLarge;
@@ -291,11 +293,11 @@ contract PunkBlocks {
         for (uint16 i = 0; i < _attributeNames.length; i++) {
             bytes32 hash = keccak256(
                 abi.encodePacked(_attributeNames[i]));
-            uint256 info = blocksInfo[hash];
-            if (info == 0) {
+            uint256 fo = blocksInfo[hash];
+            if (fo == 0) {
                 break;
             }
-            (Layer l, uint16 sL,) = _unpackInfo(info);
+            (Layer l, uint16 sL,) = _unpackInfo(fo);
             layerKeys[uint256(orderConfig[_orderID][l])] = hash;
             if (l == Layer.Base) {
                 // base later
@@ -304,7 +306,7 @@ contract PunkBlocks {
                 }
             }
         }
-        return _svg(layerKeys, _size, isLarge);
+        return _svg(layerKeys, _x, _y, _size, isLarge);
     }
 
     /**
@@ -321,16 +323,18 @@ contract PunkBlocks {
     */
     function svgFromKeys(
         bytes32[] memory _attributeKeys,
+        uint16 _x,
+        uint16 _y,
         uint16 _size,
         uint32 _orderID) external view returns (string memory) {
         bool isLarge;
         bytes32[] memory layerKeys = new bytes32[](13);
         for (uint16 i = 0; i < _attributeKeys.length; i++) {
-            uint256 info = blocksInfo[_attributeKeys[i]];
-            if (info == 0) {
+            uint256 fo = blocksInfo[_attributeKeys[i]];
+            if (fo == 0) {
                 break;
             }
-            (Layer l, uint16 sL,) = _unpackInfo(info);
+            (Layer l, uint16 sL,) = _unpackInfo(fo);
             layerKeys[uint256(orderConfig[_orderID][l])] = _attributeKeys[i];
             if (l == Layer.Base) {
                 // base later
@@ -339,7 +343,7 @@ contract PunkBlocks {
                 }
             }
         }
-        return _svg(layerKeys, _size, isLarge);
+        return _svg(layerKeys, _x, _y, _size, isLarge);
     }
 
     /**
@@ -354,17 +358,19 @@ contract PunkBlocks {
     */
     function svgFromIDs(
         uint32[] calldata _ids,
+        uint16 _x,
+        uint16 _y,
         uint16 _size,
         uint32 _orderID) external view returns (string memory) {
         bool isLarge;
         bytes32[] memory layerKeys = new bytes32[](13);
         for (uint16 i = 0; i < _ids.length; i++) {
             bytes32 hash = index[_ids[i]];
-            uint256 info = blocksInfo[hash];
-            if (info == 0) {
+            uint256 fo = blocksInfo[hash];
+            if (fo == 0) {
                 break;
             }
-            (Layer l, uint16 sL,) = _unpackInfo(info);
+            (Layer l, uint16 sL,) = _unpackInfo(fo);
             layerKeys[uint256(orderConfig[_orderID][l])] = hash;
             if (l == Layer.Base) {
                 // base later
@@ -373,7 +379,7 @@ contract PunkBlocks {
                 }
             }
         }
-        return _svg(layerKeys, _size, isLarge);
+        return _svg(layerKeys, _x, _y, _size, isLarge);
     }
 
     /**
@@ -384,6 +390,8 @@ contract PunkBlocks {
     */
     function svgFromPunkID(
         uint256 _tokenID,
+        uint16 _x,
+        uint16 _y,
         uint16 _size,
         uint32 _orderID
     ) external view returns (string memory) {
@@ -398,11 +406,11 @@ contract PunkBlocks {
             }
             bytes32 hash = keccak256(
                 abi.encodePacked(_attributeNames[i]));
-            uint256 info = blocksInfo[hash];
-            if (info == 0) {
+            uint256 fo = blocksInfo[hash];
+            if (fo == 0) {
                 break;
             }
-            (Layer l, uint16 sL,) = _unpackInfo(info);
+            (Layer l, uint16 sL,) = _unpackInfo(fo);
             layerKeys[uint256(orderConfig[_orderID][l])] = hash;
             if (l == Layer.Base) {
                 // base later
@@ -411,32 +419,48 @@ contract PunkBlocks {
                 }
             }
         }
-        return _svg(layerKeys, _size, isLarge);
+        return _svg(layerKeys, _x, _y, _size, isLarge);
     }
 
+
+    bytes constant header1 = '<svg class="punkblock" width="';
+    bytes constant header2 = '" height="';
+    bytes constant header3 = '" x="';
+    bytes constant header4 = '" y="';
+    bytes constant header5 = '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" > <style> .pix {image-rendering:pixelated;-ms-interpolation-mode: nearest-neighbor;image-rendering: -moz-crisp-edges;} </style>';
+    bytes constant end = '</svg>';
+    bytes constant imgStart = '<foreignObject x="0" y="0" width="24" height="24"> <img xmlns="http://www.w3.org/1999/xhtml"  width="100%" class="pix" src="data:image/png;base64,';
+    bytes constant imgEnd = '"/></foreignObject>';
     /**
     * @dev _svg build the svg, layer by layer.
     * @return string of the svg image
     */
     function _svg(
         bytes32[] memory _keys,
+        uint16 _x,
+        uint16 _y,
         uint16 _size,
         bool isLarge
     ) internal view returns (string memory) {
         bytes memory s = bytes(toString(_size));
         DynamicBufferLib.DynamicBuffer memory result;
-        result.append('<svg class="punkblock" width="', s, '" height="');
-        result.append(s,'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" > <style> .pix {image-rendering:pixelated;-ms-interpolation-mode: nearest-neighbor;image-rendering: -moz-crisp-edges;} </style>', "");
-        bytes memory end = '</svg>';
-        bytes memory imgStart = '<foreignObject x="0" y="0" width="24" height="24"><img xmlns="http://www.w3.org/1999/xhtml"  width="100%" class="pix" src="data:image/png;base64,';
-        bytes memory imgEnd = '"/></foreignObject>';
+        result.append(header1, s, header2);
+        result.append(s, header3, bytes(toString(_x)));
+        result.append(header4, bytes(toString(_y)), header5);
         for (uint256 i = 0; i < 13; i++) {
             if (_keys[i] == 0x0) {
                 continue;
             }
+            (, uint16 s1, uint16 s2) = info(_keys[i]);
             if (isLarge) {
+                if (s1 == 0) {
+                    continue; // no data
+                }
                 result.append(imgStart, bytes(Base64.encode(blockL[_keys[i]])), imgEnd);
             } else {
+                if (s2 == 0) {
+                    continue; // no data
+                }
                 result.append(imgStart, bytes(Base64.encode(blockS[_keys[i]])), imgEnd);
             }
         }

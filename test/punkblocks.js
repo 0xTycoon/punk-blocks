@@ -15,7 +15,7 @@ describe("PunkBlocks", function () {
         it("Get SVG by Punk", async function () {
 
 
-            svg = await blocks.svgFromPunkID(9987, 24, 0); // 8348
+            svg = await blocks.svgFromPunkID(9987, 0, 0, 24, 0); // 8348
             console.log("original punk: "+svg);
 
         });
@@ -24,7 +24,7 @@ describe("PunkBlocks", function () {
         it("Get SVGs", async function () {
 
             let attributes = ["Male 2", "Goat", "Smile", "Do-rag", "3D Glasses", "Rosy Cheeks", "Clown Eyes Green", "Pipe"];
-            let svg = await blocks.svgFromNames(attributes, 24, 0);
+            let svg = await blocks.svgFromNames(attributes, 0,0, 24, 0);
             console.log(svg);
 
             let getKey = function(s) {
@@ -43,14 +43,14 @@ describe("PunkBlocks", function () {
                 getKey("Clown Eyes Green"),
                 getKey("Pipe")
             ];
-            svg = await blocks.svgFromKeys(attributes, 24, 0);
+            svg = await blocks.svgFromKeys(attributes, 0, 0, 24, 0);
             console.log(svg);
 
-            svg = await blocks.svgFromIDs([10, 71, 12], 24, 0);
+            svg = await blocks.svgFromIDs([10, 71, 12], 0, 0, 24, 0);
             console.log(svg);
 
             // 45 is an m  only trait (Top Hat), it should not render on f
-           svg = await blocks.svgFromIDs([77,5,45], 24, 0);
+           svg = await blocks.svgFromIDs([77,5,45], 0, 0, 24, 0);
 
             console.log(svg);
 
@@ -71,7 +71,7 @@ describe("PunkBlocks", function () {
             await fp.deployed();
 
             let attributes = ["Suit Black", "Bot", "Yellow Hat", "Stogie"];
-            let svg = await blocks.svgFromNames(attributes, 48, 0);
+            let svg = await blocks.svgFromNames(attributes, 0, 0, 48, 0);
             console.log("Factory punk");
             console.log(svg);
             console.log("Factory end");
@@ -95,7 +95,7 @@ describe("PunkBlocks", function () {
             expect(await blocks.registerBlock(fromHexString("89504e470d0a1a0a0000000d4948445200000018000000180403000000125920cb00000015504c5445000000000000ff00008b532c5626007237094a1201cf76e6130000000174524e530040e6d8660000004c4944415478da62a03160141414807384949414e112ca4a4a4a302946255c1c2115272517384731484914c61154c26380102e19b5343807c5390c42082d208b0419905c2d80c901040000ffff2f3c090f8ffce8ac0000000049454e44ae426082"), new Uint8Array(0), 0, "Devil 1")).to.emit(blocks, "NewBlock");
 
             let attributes = ["Devil 1", "Goat", "Smile", "Do-rag", "3D Glasses", "Rosy Cheeks", "Clown Eyes Green", "Pipe"];
-            let svg = await blocks.svgFromNames(attributes, 48, 0);
+            let svg = await blocks.svgFromNames(attributes, 0, 0, 48, 0);
             console.log(svg);
 
             // slot taken if you try to upload the same attr name
