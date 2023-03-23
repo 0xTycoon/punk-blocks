@@ -85,23 +85,38 @@
 <hr>
 <h1>Register a New PNG Image</h1>
 <h3>This will register a new attribute on-chain.</h3>
-<form>
-    <div>
-        <label>
-            24x24 png: <input type="file" id="file-selector">
-        </label>
-        <div>
-            <img id="output" width="24" height="24" >
-        </div>
-    </div>
+<form id="register-new">
     <div>
         <label>
             Attribute Name: <input type="text" id="attribute-name"> (Tip: Use "Camel Case")
         </label>
     </div>
+
+    <div>
+        <label>
+            Male trait, 24x24 png: <input type="file" id="file-selector">
+        </label>
+        <div>
+            <img id="output" width="24" height="24" >
+        </div>
+    </div>
+    <!--
     <div>
         <label><input type="radio" value="m" name="morf" id="male"> Male</label> | <label><input type="radio" value="f" name="morf" id="female"> Female</label>
     </div>
+-->
+    <div>
+        <label>
+            Female trait, 24x24 png: <input type="file" id="file-selector-f">
+        </label>
+        <div>
+            <img id="output-f" width="24" height="24" >
+        </div>
+    </div>
+
+
+
+
     <div>
         <label>
             Layer Level:
@@ -126,10 +141,14 @@
     <div style="padding: 1em;">
         <input type="submit" id="register" value="Register">
     </div>
+    <div style="padding: 1em;">
+        <input type="submit" id="reset" value="Reset">
+    </div>
 
 </form>
 
 <p id="status" style="font-weight: bold"></p>
+<p id="status-f" style="font-weight: bold"></p>
 
 <hr>
 <a href="https://github.com/0xTycoon/punk-blocks">Get me back to home</a>
@@ -173,9 +192,490 @@
         console.log(await provider.getBlockNumber());
 
 
-        const punkBlocksAddress = "0x25A1DF485cFBb93117f12fc673D87D1cddEb845a";
+        const punkBlocksAddress = "0xdB012DD3E3345e2f8D23c0F3cbCb2D94f430Be8C";
 
-        const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"","type":"address"},{"indexed":false,"internalType":"uint32","name":"","type":"uint32"},{"indexed":false,"internalType":"string","name":"","type":"string"}],"name":"NewBlock","type":"event"},{"inputs":[],"name":"abort","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blockL","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blockS","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"blockToLayer","outputs":[{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"blocksInfo","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_fromID","type":"uint256"},{"internalType":"uint256","name":"_count","type":"uint256"}],"name":"getBlocks","outputs":[{"components":[{"internalType":"enum PunkBlocks.Layer","name":"layer","type":"uint8"},{"internalType":"bytes","name":"blockL","type":"bytes"},{"internalType":"bytes","name":"blockS","type":"bytes"}],"internalType":"struct PunkBlocks.Block[]","name":"","type":"tuple[]"},{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"}],"name":"index","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_id","type":"bytes32"}],"name":"info","outputs":[{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"},{"internalType":"uint16","name":"","type":"uint16"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextConfigId","outputs":[{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextId","outputs":[{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"},{"internalType":"enum PunkBlocks.Layer","name":"","type":"uint8"}],"name":"orderConfig","outputs":[{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes","name":"_dataL","type":"bytes"},{"internalType":"bytes","name":"_dataS","type":"bytes"},{"internalType":"uint8","name":"_layer","type":"uint8"},{"internalType":"string","name":"_name","type":"string"}],"name":"registerBlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"enum PunkBlocks.Layer[]","name":"_order","type":"uint8[]"}],"name":"registerOrderConfig","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"seal","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint32[]","name":"_ids","type":"uint32[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromIDs","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"_attributeKeys","type":"bytes32[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromKeys","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string[]","name":"_attributeNames","type":"string[]"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromNames","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenID","type":"uint256"},{"internalType":"uint16","name":"_size","type":"uint16"},{"internalType":"uint32","name":"_orderID","type":"uint32"}],"name":"svgFromPunkID","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"value","type":"uint256"}],"name":"toString","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"}];
+        const abi = [
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "name": "NewBlock",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "abort",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "blockL",
+                "outputs": [
+                    {
+                        "internalType": "bytes",
+                        "name": "",
+                        "type": "bytes"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "blockS",
+                "outputs": [
+                    {
+                        "internalType": "bytes",
+                        "name": "",
+                        "type": "bytes"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "blockToLayer",
+                "outputs": [
+                    {
+                        "internalType": "enum PunkBlocks.Layer",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "blocksInfo",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_fromID",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_count",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getBlocks",
+                "outputs": [
+                    {
+                        "components": [
+                            {
+                                "internalType": "enum PunkBlocks.Layer",
+                                "name": "layer",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "bytes",
+                                "name": "blockL",
+                                "type": "bytes"
+                            },
+                            {
+                                "internalType": "bytes",
+                                "name": "blockS",
+                                "type": "bytes"
+                            }
+                        ],
+                        "internalType": "struct PunkBlocks.Block[]",
+                        "name": "",
+                        "type": "tuple[]"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    }
+                ],
+                "name": "index",
+                "outputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_id",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "info",
+                "outputs": [
+                    {
+                        "internalType": "enum PunkBlocks.Layer",
+                        "name": "",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "",
+                        "type": "uint16"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "nextConfigId",
+                "outputs": [
+                    {
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "nextId",
+                "outputs": [
+                    {
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint32",
+                        "name": "",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "enum PunkBlocks.Layer",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "name": "orderConfig",
+                "outputs": [
+                    {
+                        "internalType": "uint16",
+                        "name": "",
+                        "type": "uint16"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes",
+                        "name": "_dataL",
+                        "type": "bytes"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "_dataS",
+                        "type": "bytes"
+                    },
+                    {
+                        "internalType": "uint8",
+                        "name": "_layer",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "registerBlock",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "enum PunkBlocks.Layer[]",
+                        "name": "_order",
+                        "type": "uint8[]"
+                    }
+                ],
+                "name": "registerOrderConfig",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "seal",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint32[]",
+                        "name": "_ids",
+                        "type": "uint32[]"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_x",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_y",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_size",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_orderID",
+                        "type": "uint32"
+                    }
+                ],
+                "name": "svgFromIDs",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "_attributeKeys",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_x",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_y",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_size",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_orderID",
+                        "type": "uint32"
+                    }
+                ],
+                "name": "svgFromKeys",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string[]",
+                        "name": "_attributeNames",
+                        "type": "string[]"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_x",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_y",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_size",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_orderID",
+                        "type": "uint32"
+                    }
+                ],
+                "name": "svgFromNames",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_tokenID",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_x",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_y",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "_size",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "_orderID",
+                        "type": "uint32"
+                    }
+                ],
+                "name": "svgFromPunkID",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "toString",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "pure",
+                "type": "function"
+            }
+        ];
 
 // The Contract object
 
@@ -203,6 +703,8 @@
     const broken = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwMCAxMDAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAwIDEwMDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8bWV0YWRhdGE+IFN2ZyBWZWN0b3IgSWNvbnMgOiBodHRwOi8vd3d3Lm9ubGluZXdlYmZvbnRzLmNvbS9pY29uIDwvbWV0YWRhdGE+CjxnPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAuMDAwMDAwLDUxMS4wMDAwMDApIHNjYWxlKDAuMTAwMDAwLC0wLjEwMDAwMCkiPjxwYXRoIGQ9Ik0xMzI0LjYsNDk4MS4zYy03LjItMTYuNy05LjYtMjIyMy4yLTcuMi00OTAxLjJsNy4yLTQ4NzAuMWgzNjczLjVoMzY3My41bDcuMiwyMTM3LjFjMi40LDExNzIuNiwwLDIxMzQuNy03LjIsMjEzNC43Yy05LjYsMC0xODA5LjItMTI2MS4yLTE5MTYuOS0xMzQyLjZjLTE0LjQtMTItMjU2LjEsMjk0LjQtNjU1LjcsODQwYy01NDAuOCw3MzcuMS02MzYuNiw4NTYuNy02NjcuNyw4MzAuNGMtMjEuNS0xNi44LTMzNy41LTI4MC03MDMuNi01ODMuOWMtMzY2LjItMzA2LjMtNjcyLjUtNTU3LjYtNjg0LjQtNTU3LjZjLTkuNiwwLTI4MCwyNDQuMS02MDAuNyw1NDAuOGwtNTg2LjMsNTQzLjNMMjQ5MC0yNjIuMWwtMzY2LjItMTYuOEwyNDQ5LjMtNi4xbDMyNS41LDI3NS4ybDYzOS00MDkuMmMzNTEuOC0yMjUsNjU1LjctNDE0LDY3NC45LTQxOC44YzIxLjUtNC44LDM2MS40LDIyNSw3ODkuNyw1NDAuOWM0MTQsMzAxLjUsNzYxLDU0My4yLDc3MC42LDUzOC40YzkuNi03LjIsMjg0LjgtMzYxLjQsNjA3LjktNzg5LjdjMzI1LjUtNDI2LDYwMC43LTc3Myw2MTUtNzY4LjJjMTIsMi40LDQyMy42LDMzMi43LDkxNi42LDczMi4zbDg5NSw3MjcuNXYxMjcwLjh2MTI2OC40TDc2NjEuNiwzOTg1LjdMNjYzNy40LDUwMTBIMzk4NS44QzE4ODYuOSw1MDEwLDEzMzEuNyw1MDAyLjgsMTMyNC42LDQ5ODEuM3ogTTYyMjMuMywzNTgxLjNsNy4yLTEwMjQuM2wxMDI0LjMtNy4ybDEwMjEuOS00Ljh2LTk2NC40VjYxOC41TDc2MTguNiw4MC4xYy0zNjEuNC0yOTYuOC02NjcuNy01MzguNS02NzkuNy01MzguNWMtMTIsMC0yNTMuNywzMDEuNS01MzMuNyw2NzAuMWMtMjgwLDM2OC41LTU0OCw3MjAuMy01OTUuOSw3ODIuNmwtODYuMiwxMTIuNWwtODE2LTU5NS45TDQwOTEuMS04Ny40bC02NzQuOSw0MzAuOGwtNjc0LjksNDMwLjhsLTEyMi4xLTEwMi45Yy02Ny01Ny41LTI5NC40LTI0Ni41LTUwNS00MjMuNkwxNzMxLjQtNzAuN2wtNy4yLDIzMDdjLTIuNCwxMjY4LjQsMCwyMzIxLjQsNy4yLDIzMzguMWM3LjIsMjEuNSw0ODEsMjguNywyMjQ5LjYsMjguN2gyMjM3LjZMNjIyMy4zLDM1ODEuM3ogTTczNzIuMSwzNzAwLjljMzkyLjUtMzkyLjUsNzEzLjItNzIwLjMsNzEzLjItNzMyLjNjMC05LjYtMzI1LjUtMTQuNC03MjIuOC0xMmwtNzI1LjEsNy4ybC03LjIsNzI1LjFjLTIuNCwzOTcuMywyLjQsNzIyLjcsMTIsNzIyLjdTNjk4Miw0MDkxLDczNzIuMSwzNzAwLjl6IE0zMzYxLjEtMTI3NC40YzU5My41LTU1Mi44LDY2Mi45LTYwNy45LDY5OC44LTU3Ni44YzQwLjcsMzMuNSwxMDI5LjEsODQ0LjgsMTIyNy43LDEwMDUuMWwxMTAuMSw4OC42bDYxNS04MzcuNmw2MTUtODM3LjZsMTEyLjUsNzYuNmM2Mi4yLDQzLjEsNDE4LjgsMjkyLDc5NC41LDU1Mi44YzM3NS43LDI2My4zLDY5Ni40LDQ4My40LDcxMy4yLDQ4OC4yYzIzLjksOS42LDI4LjctMjk5LjEsMjMuOS0xNTI2LjhsLTcuMi0xNTQxLjJINDk5OC4xSDE3MzEuNGwtNy4yLDE4MzcuOWMtNC44LDE0NTkuOCwwLDE4MzUuNiwyMy45LDE4MzcuOWM2NC42LDcuMiw2ODQuNCwzOC4zLDgxNi4xLDQwLjdsMTM4LjgsNC44TDMzNjEuMS0xMjc0LjR6Ii8+PC9nPjwvZz4KPC9zdmc+';
     const output = document.getElementById('output');
     const status = document.getElementById('status');
+    const output2 = document.getElementById('output-f');
+    const status2 = document.getElementById('status-f');
     const layer = document.getElementById('layer');
     const male = document.getElementById('male');
     const female = document.getElementById('female');
@@ -219,6 +721,7 @@
     }
 
     let blockData;
+    let blockData2;
     if (window.FileList && window.File && window.FileReader) {
         document.getElementById('file-selector').addEventListener('change', event => {
             output.src = '';
@@ -254,6 +757,48 @@
             //reader.readAsDataURL(file);
             reader.readAsArrayBuffer(file)
         });
+
+        document.getElementById('file-selector-f').addEventListener('change', event => {
+            output2.src = '';
+            status2.textContent = '';
+            const file = event.target.files[0];
+            if (!file.type) {
+                status2.textContent = 'Error: The File.type property does not appear to be supported on this browser.';
+                return;
+            }
+            if (!file.type.match('image.*')) {
+                status2.textContent = 'Error: The selected file does not appear to be an image.'
+                return;
+            }
+            const reader = new FileReader();
+            reader.addEventListener('load', event => {
+
+                output2.src = "data:image/png;base64," + _arrayBufferToBase64(event.target.result);
+
+                setTimeout(function()  {
+                    // it seems like the setting of output.src is async, but not sure what event to listen on?
+                    if (output2.naturalWidth + output2.naturalHeight !== 48) {
+                        output2.src = broken;
+                        status2.textContent = "Image size must be 24x24";
+                    }
+                }, 500 )
+
+
+                console.log("load event!");
+                blockData2 = new Uint8Array(event.target.result);
+            });
+
+            // btoa(new Uint8Array([89,88]))
+            //reader.readAsDataURL(file);
+            reader.readAsArrayBuffer(file)
+        });
+    }
+
+    async function reset(e) {
+        e.preventDefault();
+        document.getElementById(`register-new`).reset();
+        output.src = "";
+        output2.src = "";
     }
 
     async function register(e) {
@@ -276,11 +821,22 @@
         // save blockdata
 
         //singer.
-        let dm = [], df = [];
+        let dm = new Uint8Array([]), df = new Uint8Array([]);
+
+        /*
         if (document.querySelector(`[name="morf"]:checked`).value === "m") {
             dm = blockData;
         } else {
             df = blockData
+        }
+
+         */
+        if (typeof blockData !== "undefined") {
+            dm = blockData;
+        }
+
+        if (typeof blockData2 !== "undefined") {
+            df = blockData2;
         }
 
         await pb.connect(signer).registerBlock(dm, df, layer.value, att.value);
@@ -320,6 +876,7 @@
     }
 
     document.getElementById("register").addEventListener("click", register);
+    document.getElementById("reset").addEventListener("click", reset);
     document.getElementById("svgFromNames-button").addEventListener("click", svgFromNames);
     document.getElementById("svgFromKeys-button").addEventListener("click", svgFromKeys);
     document.getElementById("svgFromIDs-button").addEventListener("click", svgFromIDs);
