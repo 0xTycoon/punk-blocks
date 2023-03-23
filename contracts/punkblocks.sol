@@ -141,10 +141,10 @@ contract PunkBlocks {
     /**
     * _unpackInfo extracts block information
     */
-    function _unpackInfo(uint256 info) pure internal returns(Layer, uint16, uint16) {
-        Layer layer = Layer(uint8(info));
-        uint16 l = uint16((info & bit2byte) >> 8);
-        uint16 s = uint16((info & bit3byte) >> 24);
+    function _unpackInfo(uint256 _info) pure internal returns(Layer, uint16, uint16) {
+        Layer layer = Layer(uint8(_info));
+        uint16 l = uint16((_info & bit2byte) >> 8);
+        uint16 s = uint16((_info & bit3byte) >> 24);
         return (layer, l, s);
     }
 

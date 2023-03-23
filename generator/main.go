@@ -21,17 +21,18 @@ type blockstruct struct {
 	f     []byte
 	m     []byte
 	layer string
+	name  string
 }
 
 var myBlocks = make(map[string]*blockstruct)
-var myBlockKeys = make([]string, 0)
 
 func dumpBlocks() {
-
+	var myBlockKeys = make([]string, 0)
+	var myFactoryBlockKeys = make([]string, 0)
 	var allBlocks blocks
 	var err error
 	var blocksPath = "./factory-traits-24x24.png"
-	if _, err = allBlocks.load(blocksPath, 18, 10); err != nil {
+	if _, err = allBlocks.load(blocksPath, 20, 10); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -40,8 +41,12 @@ func dumpBlocks() {
 	records, err := csvReader.ReadAll()
 	_ = records
 	var str string
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	for i := 0; i < len(records); i++ {
+	for i := 0; i < 179; i++ {
 		hash := solsha3.SoliditySHA3(
 			// types
 			[]string{"string"},
@@ -57,10 +62,15 @@ func dumpBlocks() {
 		} else {
 			block = &blockstruct{}
 			myBlocks[key] = block
-			myBlockKeys = append(myBlockKeys, key)
+			if i < 133 {
+				myBlockKeys = append(myBlockKeys, key)
+			} else {
+				myFactoryBlockKeys = append(myFactoryBlockKeys, key)
+			}
+
 		}
 		block.layer = records[i][3]
-
+		block.name = records[i][1]
 		b := allBlocks.getPunkBlock(i) // 18 is cig
 		b, err = optimizeImage(b)
 		var buf bytes.Buffer
@@ -75,7 +85,16 @@ func dumpBlocks() {
 
 	}
 
-	for _, blockKey := range myBlockKeys {
+	str = generatePunkBlocksSolidity(myBlockKeys)
+	str = str + generateFactoryPunksSolidity(myFactoryBlockKeys)
+
+	fmt.Println(str)
+
+}
+
+func generatePunkBlocksSolidity(keys []string) string {
+	var str string
+	for _, blockKey := range keys {
 		b := myBlocks[blockKey]
 		//fmt.Println(blockKey)
 		//var block *blockstruct
@@ -86,8 +105,8 @@ func dumpBlocks() {
 
 		buf := new(bytes.Buffer)
 		_ = binary.Write(buf, binary.LittleEndian, uint8(layer))
-		err = binary.Write(buf, binary.LittleEndian, uint16(len(b.m)))
-		err = binary.Write(buf, binary.LittleEndian, uint16(len(b.f)))
+		_ = binary.Write(buf, binary.LittleEndian, uint16(len(b.m)))
+		_ = binary.Write(buf, binary.LittleEndian, uint16(len(b.f)))
 		bytesarr := make([]byte, 8)
 		copy(bytesarr, buf.Bytes())
 		little := binary.LittleEndian.Uint64(bytesarr)
@@ -112,9 +131,31 @@ func dumpBlocks() {
 `
 
 	}
+	return str
+}
 
-	fmt.Println(str)
+func generateFactoryPunksSolidity(keys []string) string {
+	var str string
+	for _, blockKey := range keys {
+		b := myBlocks[blockKey]
 
+		arg1 := `""`
+		arg2 := `""`
+		if len(b.m) > 0 {
+			arg1 = `hex"` + hex.EncodeToString(b.m) + `"`
+		}
+		if len(b.f) > 0 {
+			arg2 = `hex"` + hex.EncodeToString(b.f) + `"`
+		}
+
+		str = str + `
+	pb.registerBlock(` + arg1 + `,
+		` + arg2 + `,
+		` + b.layer + `,
+		"` + b.name + `");`
+
+	}
+	return str
 }
 
 /*
