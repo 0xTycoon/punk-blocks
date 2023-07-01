@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Author: tycoon.eth, thanks to @geraldb & @samwilsn on Github for inspiration!
 // Also, thanks to jeremy.eth and @dumbnamenumbers for the review & feedback
-// Version: v0.1.4
+// Version: v0.1.5
 // Note: The MIT license is for the source code only. Images registered through
 // this contract retain all of their owner's rights. This contract
 // is a non-profit "library" project and intended to archive & preserve punk
@@ -128,6 +128,15 @@ contract RenderBlocks {
     */
     function info(bytes32 _id) view public returns(IPunkBlocks.Layer, uint16, uint16) {
         return pb.info(_id);
+    }
+
+
+    /**
+    * @dev gets the raw info value.
+    * byte 0: layer, byte 1-2: blockL.length, byte 3-5: blockS.length
+    */
+    function blocksInfo(bytes32 _id) view external returns(uint256) {
+        return pb.blocksInfo(_id);
     }
 
     /**

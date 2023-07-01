@@ -25,7 +25,7 @@ mainnet.
 
 `punkblocks.sol`   => [`0xe91eb909203c8c8cad61f86fc44edee9023bda4d`](https://etherscan.io/address/0xe91eb909203c8c8cad61f86fc44edee9023bda4d#code)
 
-`renderblocks.sol` => [`0x855f61Eedd85cBB65c722f3e768992aC55e1A3fb`](https://etherscan.io/address/0x855f61Eedd85cBB65c722f3e768992aC55e1A3fb#code)
+`renderblocks.sol` => [`0x829e113C94c1acb6b1b5577e714E486bb3F86593`](https://etherscan.io/address/0x829e113C94c1acb6b1b5577e714E486bb3F86593#code)
 
 
 ### Simple UI (Demo)
