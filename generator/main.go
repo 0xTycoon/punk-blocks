@@ -32,7 +32,7 @@ func dumpBlocks() {
 	var allBlocks blocks
 	var err error
 	var blocksPath = "./factory-traits-24x24.png"
-	if _, err = allBlocks.load(blocksPath, 20, 10); err != nil {
+	if _, err = allBlocks.load(blocksPath, 22, 10); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -46,7 +46,7 @@ func dumpBlocks() {
 		return
 	}
 
-	for i := 0; i < 179; i++ {
+	for i := 0; i < 200; i++ {
 		hash := solsha3.SoliditySHA3(
 			// types
 			[]string{"string"},
@@ -87,6 +87,8 @@ func dumpBlocks() {
 
 	str = generatePunkBlocksSolidity(myBlockKeys)
 	str = str + generateFactoryPunksSolidity(myFactoryBlockKeys)
+	str = str + generateTraits(myBlockKeys)
+	str = str + generateTraits(myFactoryBlockKeys)
 
 	fmt.Println(str)
 
@@ -156,6 +158,35 @@ func generateFactoryPunksSolidity(keys []string) string {
 
 	}
 	return str
+}
+
+func generateTraits(keys []string) string {
+	str := "\n"
+
+	/*
+
+		traits["hshsg"] = Trait(false, "yeys")
+
+	*/
+
+	for _, blockKey := range keys {
+		b := myBlocks[blockKey]
+		boolStr := "false"
+		if b.layer == "0" {
+			boolStr = "true"
+		}
+		if len(b.m) > 0 {
+			str = str + `attributes[0x` + blockKey + `] = Attribute(` + boolStr + `, "` + b.name + `"); // ` + b.layer + `
+`
+		} else if len(b.f) > 0 {
+			str = str + `attributes[0x` + blockKey + `] = Attribute(` + boolStr + `, "` + b.name + `"); // ` + b.layer + `
+`
+		}
+
+	}
+
+	return str
+
 }
 
 /*

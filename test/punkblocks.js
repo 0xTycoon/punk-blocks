@@ -2,11 +2,16 @@ const {expect} = require("chai");
 const {ContractFactory, utils, BigNumber} = require('ethers');
 
 describe("PunkBlocks", function () {
-    let PunkBlocks, blocks;
+    let PunkBlocks, pb, RenderBlocks, blocks;
     before(async function () {
         PunkBlocks = await ethers.getContractFactory("PunkBlocks");
-        blocks = await PunkBlocks.deploy();
+        pb = await PunkBlocks.deploy();
+        await pb.deployed();
+
+        RenderBlocks = await ethers.getContractFactory("RenderBlocks");
+        blocks = await RenderBlocks.deploy(pb.address);
         await blocks.deployed();
+
     });
 
     describe("FullTest", function () {
@@ -123,6 +128,20 @@ describe("PunkBlocks", function () {
             expect(b[0][0]["blockL"]).to.equal(("0x89504e470d0a1a0a0000000d4948445200000018000000180403000000125920cb00000012504c5445000000000000713f1d8b532c5626007237092b4acd040000000174524e530040e6d8660000004f4944415478da62a00a1014141480b11995949414611c2165252525989490113247092747c549c945006698629092a800c264b8324674030489315a49118f3284ab9590fc23045783cc01040000ffffd8690b6ca3604b190000000049454e44ae426082"));
         });
 
+        // registerOrderConfig
+        it("test registerOrderConfig", async function () {
+            await blocks.registerOrderConfig([0,2,3,1,5,6,7,8,9,4,11,10,12]);
+            for (let i=0; i<13; i++) {
+                console.log(await blocks.orderConfig(1, i));
+            }
+
+            let attributes = ["Female 1", "Big Shades", "Medical Mask"];
+            let svg = await blocks.svgFromNames(attributes, 0, 0, 48, 0);
+            console.log("Big Shades layer test");
+            console.log(svg);
+            console.log("END Big Shades layer test");
+
+        });
 
     })
 

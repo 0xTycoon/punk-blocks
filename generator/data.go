@@ -18,6 +18,34 @@ package main
 
 Male 1 - the darkest one
 Male 4 - the lightest
+
+new order:
+
+blocks = await hre.ethers.getContractAt(BLOCKS_ABI, "0xe91eb909203c8c8cad61f86fc44edee9023bda4d");
+
+        /**
+         0 Base,
+         2 Cheeks,
+         3 Blemish,
+         1 Mouth,
+         5 Neck,
+         6 Beard,
+         7 Earring,
+         8 HeadTop1,
+         9 HeadTop2,
+         11 MouthProp,
+         4 Eyes,
+         10 Eyewear,
+         12 Nose
+
+
+        await blocks.registerOrderConfig(
+            [0,2,3,1,5,6,7,8,9,11,4,19,12]
+        );
+
+
+so that med mask doesn't overlap Big Shades
+
 */
 
 var layers = `0,Base,
@@ -291,12 +319,12 @@ var params = `0,Male 1,m,0,598
 132,Silver Chain,f,5,156
 133,Stogie,m,11,1 
 134,Stogie,f,11,1
-135,Earphone,f,9,1
-136,Earphone,m,9,1
+135,Headset,f,7,1
+136,Headset,m,7,1
 137,Employee Cap,m,9,1 
 138,Employee Cap,f,9,1
-139,Headphones,m,7,1
-140,Headphones,f,7,1
+139,Earphones,m,9,1
+140,Earphones,f,9,1
 141,Headphones Red,m,9,1 
 142,Headphones Red,f,9,1
 143,Headphones Yellow,m,9,1
@@ -336,6 +364,26 @@ var params = `0,Male 1,m,0,598
 177,Alienette 4,f,0,1
 178,Alienette 5,f,0,1
 179,Alienette 6,f,0,1
+180,Pink Ape,m,0,88
+181,Male 5,m,0,99
+182,Male 6,m,0,99
+183,Male 7,m,0,88
+184,Apette,f,0,88
+185,Female 5,f,0,88
+186,Female 6,f,0,88
+187,Female 7,f,0,88
+188,Alientina,f,0,88
+189,Zombina,f,0,88
+190,ZombieApe,m,0,88
+191,Cigarina,f,0,1
+192,Cyborghina 1,f,0,4
+193,Cyborghina 2,f,0,4
+194,Cyborghina 3,f,0,4
+195,Cyborghina 4,f,0,4
+196,Apexus 1,m,0,4
+197,Apexus 2,m,0,4
+198,Apexus 3,m,0,4
+199,Apexus 4,m,0,4
 `
 
 /*

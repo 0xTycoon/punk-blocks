@@ -17,10 +17,21 @@ import (
 	"time"
 )
 
+/*
+The Economic theory of our Harberger Tax says that the CEO title will always go
+to the most capable and competent holder possible.
+	The biggest reason why the CIGs are burned when buying the title is
+bought, is to discourage CEOs who are simply motivated by money and are only
+there to make CIG. Likewise, this is the reason why the CEO is not
+being paid CIG, but has to pay a tax to maintain the role.
+Also, burning of CIG is a method of re-distributing
+profits equally to all the holders. Thus the CEO's interest is aligned
+with the holders.
+*/
 // stogie male, stogie female, earphone fem, earphone male, employee hat male, employee hat fem, headphones male
 // headphone fem, headphone red male, headphones red fem, headphones yell fem, gasmask m, gasmask f, googles m, goggles f
 // pen f, pencil m, pencil f, red hat m, red hat f, white hat m, suit m
-// suit f,
+// suit f, bot m, Bot f, Killer Bot m, Killer Bot f, Green Alien m,
 func TestThis(t *testing.T) {
 	hash := solsha3.SoliditySHA3(
 		// types
@@ -44,6 +55,7 @@ type block struct {
 	cat  int
 	stat map[int]int // base id => frequency count
 	img  map[int]int // base id => image title id, for every stat
+	sex  string
 }
 
 func (b *block) save() {
@@ -123,13 +135,108 @@ func parseIntSlice(in []string) map[int]int {
 	return out
 }
 
+func TestAttributes(t *testing.T) {
+	var blocksPath = "./factory-traits-24x24.png"
+
+	var err error
+	if _, err = allBlocks.load(blocksPath, 20, 10); err != nil {
+		fmt.Println(err)
+		t.Error(err)
+	}
+	csvReader := csv.NewReader(bytes.NewReader([]byte(params)))
+	records, err := csvReader.ReadAll()
+	attributes := make(map[int]block)
+	male := make(map[int]block)
+	female := make(map[int]block)
+	bases := make(map[int]block)
+	var fcnt, mcnt int
+	var blocks map[int]block
+	for i := 0; i < len(records); i++ {
+		cat, _ := strconv.Atoi(records[i][3]) // layer
+		id, _ := strconv.Atoi(records[i][0])
+		frq, _ := strconv.Atoi(records[i][3])
+
+		if records[i][3] == "0" {
+			blocks = bases
+		} else {
+			blocks = attributes
+		}
+		blocks[i] = block{
+			i:    allBlocks.getPunkBlock(id),
+			id:   id,
+			freq: frq,
+			name: records[i][1],
+			cat:  cat,
+			sex:  records[i][2],
+		}
+
+		if records[i][3] != "0" && i < 133 {
+			// collect non factory traits
+			if records[i][2] == "m" {
+				male[mcnt] = blocks[i]
+				mcnt++
+			} else {
+				female[fcnt] = blocks[i]
+				fcnt++
+			}
+		}
+
+	}
+
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+
+	c := collection{cols: 100, rows: 100}
+	baseM := bases[1] // 171
+	baseF := bases[5] // 175
+	testAttr := make(map[int]block)
+	for att := range attributes {
+		if att < 133 {
+			continue
+		}
+
+		if attributes[att].sex == "m" {
+			testAttr = make(map[int]block)
+			testAttr[attributes[att].cat] = attributes[att]
+			testAttr = randumoor(male, testAttr, r1, "m")
+			c.drawPunk2(baseM, testAttr)
+		}
+
+		if attributes[att].sex == "f" {
+			testAttr = make(map[int]block)
+			_ = r1
+			testAttr[attributes[att].cat] = attributes[att]
+			testAttr = randumoor(female, testAttr, r1, "f")
+			c.drawPunk2(baseF, testAttr)
+		}
+
+	}
+	c.save()
+
+}
+
+func randumoor(selection map[int]block, source map[int]block, r1 *rand.Rand, sex string) map[int]block {
+
+	for picked := 0; picked < 8; {
+		i := r1.Intn(len(selection))
+		pick := selection[i]
+		if _, ok := source[pick.cat]; !ok && pick.sex == sex {
+			source[pick.cat] = pick
+			picked++
+		}
+
+	}
+
+	return source
+}
+
 /**
 todo base and base types. A map for each base type, this map stores: a map with all layers => blocks
 */
 func TestGenerator(t *testing.T) {
 
 	var blocksPath = "./factory-traits-24x24.png"
-	attributes, bases, err := loadBases(blocksPath)
+	attributes, bases, err := loadBases(blocksPath, 20, 10)
 	if err != nil {
 		t.Error(err)
 		return
@@ -169,10 +276,10 @@ func TestGenerator(t *testing.T) {
 
 var allBlocks blocks
 
-func loadBases(blocksPath string) (map[int][]block, map[int][]block, error) {
+func loadBases(blocksPath string, rows int, cols int) (map[int][]block, map[int][]block, error) {
 
 	var err error
-	if _, err = allBlocks.load(blocksPath, 17, 10); err != nil {
+	if _, err = allBlocks.load(blocksPath, rows, cols); err != nil {
 		fmt.Println(err)
 		return nil, nil, err
 	}
@@ -187,7 +294,7 @@ func loadBases(blocksPath string) (map[int][]block, map[int][]block, error) {
 
 		var blocks map[int][]block
 
-		if i < 11 {
+		if records[i][3] == "0" {
 			blocks = bases
 		} else {
 			blocks = attributes
@@ -211,6 +318,35 @@ type collection struct {
 	nextID int
 	cols   int
 	rows   int
+}
+
+func (c *collection) drawPunk2(base block, attributes map[int]block) {
+	x := c.nextID % c.cols * 24
+	y := (c.rows * c.nextID) / (c.rows * 100) * 24
+	//fmt.Println("x:", x, " y:", y)
+	var img *image.RGBA
+	if c.i == nil {
+		fmt.Println("img nil")
+		c.i = image.NewRGBA(image.Rect(0, 0, c.cols*24, c.rows*24))
+	}
+	img = base.i.(*image.RGBA) //allBlocks.getPunkBlock(base.img[base.id]).(*image.RGBA)
+
+	draw.Draw(c.i, image.Rect(x, y, x+24, y+24), img, img.Bounds().Min, draw.Over)
+	base.save()
+	fmt.Println("punkid:", c.nextID, attributes)
+	for i := 0; i < 13; i++ {
+		if v, ok := attributes[i]; ok {
+			img = v.i.(*image.RGBA) //allBlocks.getPunkBlock(v.img[base.id]).(*image.RGBA)
+			draw.Draw(c.i, image.Rect(x, y, x+24, y+24), img, img.Bounds().Min, draw.Over)
+			//v.save()
+		}
+	}
+	if c.nextID == 20 {
+		//c.save()
+		//os.Exit(0)
+	}
+
+	c.nextID++
 }
 
 func (c *collection) drawPunk(base block, attributes map[int]block) {
@@ -265,7 +401,7 @@ func TestCollectionMaker(t *testing.T) {
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
 	var blocksPath = "./traits-24x24.png"
-	attributes, bases, err := loadBases(blocksPath)
+	attributes, bases, err := loadBases(blocksPath, 16, 10)
 	_ = attributes
 	if err != nil {
 		t.Error(err)
