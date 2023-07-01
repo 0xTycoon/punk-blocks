@@ -382,9 +382,9 @@ If you would like to add your blocks to the list, please submit a PR.
 Notes:
 
 - Apelinah has a miss-alignment, `Apette` fixes it
-- Headphones has an incorrect layer, it should be 9 not 7. `Earphones`
+- Headphones has an incorrect layer, it should be 9 not 7. `Earbuds`
   fixes this. They were also labelled incorrectly.
-- Earphone was mislabeled, use `Headset` instead
+- Earphone was mislabeled, use `Headset` instead. The layer should be 7.
 
 ### List of layer ordering configurations
 

@@ -323,8 +323,8 @@ var params = `0,Male 1,m,0,598
 136,Headset,m,7,1
 137,Employee Cap,m,9,1 
 138,Employee Cap,f,9,1
-139,Earphones,m,9,1
-140,Earphones,f,9,1
+139,Earbuds,m,9,1
+140,Earbuds,f,9,1
 141,Headphones Red,m,9,1 
 142,Headphones Red,f,9,1
 143,Headphones Yellow,m,9,1
