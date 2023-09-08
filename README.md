@@ -29,6 +29,10 @@ mainnet.
 
 `punkblocks.sol` [seal() transaction](https://etherscan.io/tx/0xcd9922d1f7d1859a5d0a4eeccf5bed4f937eef0cc29d4fd39252fe1fb1851dbd) done.
 
+Update: It's not possible to deploy the contracts in the current form if the chain impliments EIP-3860.
+This EIP has been enabled on Ethereum in the Shangai upgrade. The above contracts were deployed
+just before this upgrade. To fix the contracts, they would need to be initialized via an external function (TODO).
+
 ### Simple UI (Demo)
 
 Here is a [simple web UI](https://0xtycoon.github.io/punk-blocks/) for generating punks from blocks, or
